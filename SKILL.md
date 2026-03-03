@@ -1,164 +1,127 @@
 ---
 name: star-office-ui
-description: 为你的 AI 助手创建一个“像素办公室”可视化界面，手机可通过 Cloudflare Tunnel 公网访问！
-metadata:
-  {
-    "openclaw": { "emoji": "🏢", "title": "Star 像素办公室", "color": "#ff6b35" }
-  }
+description: Star Office UI 一键化 Skill：帮主人快速部署像素办公室看板，支持多 Agent 加入、状态可视化、移动端查看与公网访问。
 ---
 
 # Star Office UI Skill
 
-## 效果预览
-- 俯视像素办公室背景（可自己画/AI 生成/找素材）
-- 像素小人代表助手：会根据 `state` 在不同区域移动，并带眨眼/气泡/打字机等动态
-- 手机可通过 Cloudflare Tunnel quick tunnel 公网访问
+本 Skill 面向想快速帮主人搭建“像素办公室看板”的 OpenClaw（龙虾）：
+- 目标：主人只需“看到效果”，尽量少问问题
+- 你可以按下面的步骤，一步一步帮主人跑起来并对外访问
 
-## 前置条件
-- 有一台能跑 Python 的服务器（或本地电脑）
-- 一张 800×600 的 PNG 办公室背景图（俯视像素风最佳）
-- 有 Python 3 + Flask
-- 有 Phaser CDN（前端直接用，无需安装）
+---
 
-## 快速开始
+## 0. 一句话告诉主人这是什么
 
-### 1. 准备目录
+你可以先和主人说：
+> 这是一个多人协作的像素办公室仪表盘，你的 AI 助手会根据状态自动走到不同位置，还能看到昨天的工作小记！
+
+---
+
+## 1. 30 秒一键启动（推荐你先做一遍）
+
+在你这台机器执行（按顺序）：
+
 ```bash
-mkdir -p star-office-ui/backend star-office-ui/frontend
+# 1) 下载仓库
+git clone https://github.com/ringhyacinth/Star-Office-UI.git
+cd Star-Office-UI
+
+# 2) 安装依赖
+python3 -m pip install -r backend/requirements.txt
+
+# 3) 准备状态文件（首次）
+cp state.sample.json state.json
+
+# 4) 启动后端
+cd backend
+python3 app.py
 ```
 
-### 2. 准备背景图
-把你的办公室背景图放到 `star-office-ui/frontend/office_bg.png`
+然后告诉主人：
+> 好了，你现在打开 http://127.0.0.1:18791 就能看到像素办公室了！
 
-### 3. 写后端 Flask app
-创建 `star-office-ui/backend/app.py`：
-```python
-#!/usr/bin/env python3
-from flask import Flask, jsonify, send_from_directory
-from datetime import datetime
-import json
-import os
+---
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(ROOT_DIR, "frontend")
-STATE_FILE = os.path.join(ROOT_DIR, "state.json")
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/static")
+## 2. 帮主人切状态体验一下
 
-DEFAULT_STATE = {
-    "state": "idle",
-    "detail": "等待任务中...",
-    "progress": 0,
-    "updated_at": datetime.now().isoformat()
-}
+在项目根目录执行：
 
-def load_state():
-    if os.path.exists(STATE_FILE):
-        try:
-            with open(STATE_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return dict(DEFAULT_STATE)
-
-def save_state(state):
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(state, f, ensure_ascii=False, indent=2)
-
-if not os.path.exists(STATE_FILE):
-    save_state(DEFAULT_STATE)
-
-@app.route("/")
-def index():
-    return send_from_directory(FRONTEND_DIR, "index.html")
-
-@app.route("/status")
-def get_status():
-    return jsonify(load_state())
-
-@app.route("/health")
-def health():
-    return jsonify({"status": "ok", "timestamp": datetime.now().isoformat()})
-
-if __name__ == "__main__":
-    print("Listening on http://0.0.0.0:18791")
-    app.run(host="0.0.0.0", port=18791, debug=False)
-```
-
-### 4. 写前端 Phaser UI
-创建 `star-office-ui/frontend/index.html`（参考完整示例）：
-- 用 `this.load.image('office_bg', '/static/office_bg.png')` 加载背景图
-- 用 `this.add.image(400, 300, 'office_bg')` 放背景
-- 状态区域映射：自己定义 workdesk/breakroom 的坐标
-- 加动态效果：眨眼/气泡/打字机/小踱步等
-
-### 5. 写状态更新脚本
-创建 `star-office-ui/set_state.py`：
-```python
-#!/usr/bin/env python3
-import json, os, sys
-from datetime import datetime
-STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "state.json")
-VALID_STATES = ["idle", "writing", "researching", "executing", "syncing", "error"]
-
-def load_state():
-    if os.path.exists(STATE_FILE):
-        try:
-            with open(STATE_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {"state": "idle", "detail": "等待任务中...", "progress": 0, "updated_at": datetime.now().isoformat()}
-
-def save_state(state):
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(state, f, ensure_ascii=False, indent=2)
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("用法: python set_state.py <state> [detail]")
-        sys.exit(1)
-    s = sys.argv[1]
-    if s not in VALID_STATES:
-        print(f"有效状态: {', '.join(VALID_STATES)}")
-        sys.exit(1)
-    state = load_state()
-    state["state"] = s
-    state["detail"] = sys.argv[2] if len(sys.argv) > 2 else ""
-    state["updated_at"] = datetime.now().isoformat()
-    save_state(state)
-    print(f"状态已更新: {s} - {state['detail']}")
-```
-
-### 6. 启动后端
 ```bash
-cd star-office-ui/backend
-pip install flask
-python app.py
+# 工作中 → 去办公桌
+python3 set_state.py writing "正在帮你整理文档"
+
+# 同步中
+python3 set_state.py syncing "同步进度中"
+
+# 报错中 → 去 bug 区
+python3 set_state.py error "发现问题，正在排查"
+
+# 待命 → 回休息区
+python3 set_state.py idle "待命中，随时准备为你服务"
 ```
 
-### 7. 开通 Cloudflare Tunnel（公网访问）
-- 下载 cloudflared：https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/#1-download-and-install-cloudflared
-- 启动 quick tunnel：
-  ```bash
-  cloudflared tunnel --url http://127.0.0.1:18791
-  ```
-- 它会给你一个 `https://xxx.trycloudflare.com` 地址，手机就能打开了
+---
 
-## 状态约定（可按需调整）
-- `idle / syncing / error` → 休息区（breakroom）
-- `writing / researching / executing` → 办公桌（workdesk）
+## 3. 帮主人公网化（对外访问）
 
-## 安全注意事项
-- quick tunnel URL 可能会变，不保证 uptime（适合 demo）
-- 对外分享时：任何访问者都能看到 `state/detail`（detail 里不要写隐私）
-- 如需更强隐私：给 `/status` 加 token / 只返回模糊状态 / 不写 detail
+### 推荐方式：Cloudflare Tunnel（最快）
 
-## 动态效果（好实现版，开箱即用）
-- 同区域随机小踱步
-- 偶尔眨眼
-- 偶尔冒气泡（按状态随机短句）
-- 状态栏打字机效果
-- 走路轻微上下颠
+如果你这台机器有 `cloudflared`，直接跑：
 
-## 完整示例仓库（可选）
-可直接复制这个项目的完整文件：`/root/.openclaw/workspace/star-office-ui/`（包含完整的前端 + 后端 + 状态脚本）
+```bash
+cloudflared tunnel --url http://127.0.0.1:18791
+```
+
+会得到一个 `https://xxx.trycloudflare.com` 链接，发给主人即可。
+
+如果没有 `cloudflared`，也可以用你自己熟悉的公网方案（Nginx/Caddy 反向代理 / 自有域名 / 其他隧道等）。
+
+---
+
+## 4. 邀请其他龙虾加入（可选）
+
+如果有其他 OpenClaw 想加入你主人的办公室：
+
+### 步骤 A：告诉其他龙虾用 office-agent-push.py
+
+你可以让其他龙虾：
+1) 下载 `office-agent-push.py`（可以直接从你这个仓库拿）
+2) 让它调用 `join-agent` + 周期 `agent-push`
+3) 你主人那边就能看到它进办公室了
+
+### 步骤 B：join key 说明
+
+- 仓库里默认有 `join-keys.json`（`ocj_starteam01` ~ `ocj_starteam08`）
+- 同一个 key 最多 3 人同时在线
+- 你也可以帮主人新建自己的 key
+
+---
+
+## 5. 昨日小记（可选）
+
+如果你主人想看到“昨日小记”：
+- 在仓库上级目录放一个 `memory/YYYY-MM-DD.md`
+- 后端会自动读取昨天（或最近可用）的记录，做基础脱敏后展示
+
+---
+
+## 6. 常见问题（主人可能问你的）
+
+### Q1：“为什么角色选了宝石海星？”
+> 宝石海星是宝可梦的 IP，不是原创的；选它是因为和作者名字“海辛”在中文里有谐音趣味，这是一个非商用的粉丝创作，仅供学习演示。
+
+### Q2：“我可以商用吗？”
+> 代码玩法可以基于 MIT 用，但美术资产（包括角色/场景）禁止商用；如果你要商用，请务必换成你自己的原创美术资产。
+
+### Q3：“其他龙虾怎么加入？”
+> 用 join key 加入，然后持续推送状态就行；仓库里有 `office-agent-push.py` 可以给其他龙虾用。
+
+---
+
+## 7. 给你的提示
+
+- 尽量帮主人把“启动步骤”做完，让主人只负责“看”和“体验”
+- 如果主人要对外访问，优先用 Cloudflare Tunnel（最快最方便）
+- 如果主人要改状态，你可以帮他调用 `set_state.py`，不用让他自己敲命令
+- 注意不要暴露你主人的内网地址或私有信息
