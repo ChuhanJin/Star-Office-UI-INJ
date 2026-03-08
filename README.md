@@ -2,24 +2,16 @@
 
 A pixel-art styled office dashboard for visualizing AI agent work status in real-time, with **Injective EVM wallet integration via MetaMask**.
 
-## Recent Updates
-
-- **MetaMask Wallet Integration** — Connect via MetaMask, view INJ balance on Injective EVM
-- **Network Switching** — Toggle between Injective EVM Mainnet (Chain ID 60) and Testnet (Chain ID 888)
-- **Viem-compatible Architecture** — Uses standard EVM tooling (window.ethereum, JSON-RPC)
-- Work Log panel displays real-time task updates
-- Automatic state synchronization via `set_state.py`
-
 ## Features
 
 - Real-time work status visualization
 - Automatic state management with 6 states: `idle`, `writing`, `researching`, `executing`, `syncing`, `error`
-- **MetaMask Wallet Panel** — Connect wallet, view INJ balance, switch networks
-- **Injective EVM Support** — Mainnet & Testnet with auto network add to MetaMask
-- Multi-language support (Chinese, English, Japanese)
-- Responsive design for desktop and mobile
+- **MetaMask Wallet Integration** — Connect wallet, view INJ balance on Injective EVM
+- **Injective EVM Support** — Mainnet (Chain ID 1776) & Testnet (Chain ID 1439) with auto network add to MetaMask
 - Multi-agent support with guest agent system
+- Responsive design for desktop and mobile
 - Integration with OpenClaw agent framework
+- Real-time work log updates
 
 ## Quick Start
 
@@ -46,10 +38,10 @@ Open your browser at `http://127.0.0.1:19000` to access the UI.
 
 1. Install [MetaMask](https://metamask.io) browser extension
 2. Open the office UI at `http://127.0.0.1:19000`
-3. Click **连接钱包** (Connect Wallet) in the wallet panel
+3. Click **Connect Wallet** in the wallet panel
 4. Approve the MetaMask connection
 5. If Injective EVM network is not configured, it will be auto-added to MetaMask
-6. Use **🔄 切换网络** to toggle between Mainnet and Testnet
+6. Use **Toggle Network** to switch between Mainnet and Testnet
 
 ## Wallet Integration
 
@@ -71,7 +63,7 @@ The wallet integration uses a **frontend-first approach**:
 
 ### Wallet API Endpoints
 
-#### EVM (New — MetaMask-compatible)
+#### EVM (MetaMask-compatible)
 
 | Endpoint | Method | Description |
 |---|---|---|
@@ -153,11 +145,7 @@ Star-Office-UI-INJ/
 - `POST /leave-agent` — Leave office
 - `POST /agent-push` — Push agent status
 
-## Configuration
-
-Edit `state.json` to customize office appearance, agent names, and settings.
-
-### MetaMask Setup
+## MetaMask Setup
 
 MetaMask will automatically prompt to add Injective EVM networks when you click "Connect Wallet". Manual configuration:
 
@@ -175,6 +163,10 @@ MetaMask will automatically prompt to add Injective EVM networks when you click 
 - Currency Symbol: `INJ`
 - Explorer: `https://testnet.blockscout.injective.network/`
 - Faucet: `https://testnet.faucet.injective.network/`
+
+## Configuration
+
+Edit `state.json` to customize office appearance, agent names, and settings.
 
 ## License
 
