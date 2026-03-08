@@ -2349,6 +2349,81 @@ def wallet_send():
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
+# ─────────────────────────────────────────────────────────────
+# Token Usage Tracking
+# ─────────────────────────────────────────────────────────────
+
+TOKEN_USAGE_FILE = os.path.join(ROOT_DIR, "token-usage.json")
+_MAX_SESSIONS = 3        # keep only the 3 most recent sessions
+_MAX_POINTS_PER_SESSION = 200  # cap history per session
+
+def _load_token_usage():
+    if not os.path.exists(TOKEN_USAGE_FILE):
+        return {"sessions": []}
+    try:
+        with open(TOKEN_USAGE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {"sessions": []}
+
+def _save_token_usage(data):
+    with open(TOKEN_USAGE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+@app.route("/token-usage", methods=["GET"])
+def get_token_usage():
+    """Return the last N sessions of token usage snapshots."""
+    data = _load_token_usage()
+    sessions = data.get("sessions", [])[-_MAX_SESSIONS:]
+    return jsonify({"sessions": sessions})
+
+@app.route("/token-usage/record", methods=["POST"])
+def record_token_usage():
+    """
+    Push a token snapshot for the current session.
+    Body: { sessionId, label, inputTokens, outputTokens, cachedTokens, model }
+    """
+    body = request.get_json(silent=True) or {}
+    session_id = body.get("sessionId", "unknown")
+    label      = body.get("label", session_id[:16])
+    inp        = int(body.get("inputTokens", 0))
+    out        = int(body.get("outputTokens", 0))
+    cached     = int(body.get("cachedTokens", 0))
+    model      = body.get("model", "")
+    ts         = datetime.now().isoformat()
+
+    data = _load_token_usage()
+    sessions = data.get("sessions", [])
+
+    # Find or create session bucket
+    bucket = next((s for s in sessions if s["sessionId"] == session_id), None)
+    if bucket is None:
+        bucket = {"sessionId": session_id, "label": label, "model": model,
+                  "startedAt": ts, "points": []}
+        sessions.append(bucket)
+
+    # Keep only last _MAX_SESSIONS sessions
+    if len(sessions) > _MAX_SESSIONS:
+        sessions = sessions[-_MAX_SESSIONS:]
+
+    # Add point
+    points = bucket.setdefault("points", [])
+    points.append({"ts": ts, "in": inp, "out": out, "cached": cached})
+    if len(points) > _MAX_POINTS_PER_SESSION:
+        bucket["points"] = points[-_MAX_POINTS_PER_SESSION:]
+
+    bucket["label"] = label
+    bucket["model"] = model
+    data["sessions"] = sessions
+    _save_token_usage(data)
+    return jsonify({"ok": True, "sessions": len(sessions)})
+
+@app.route("/token-usage/reset", methods=["POST"])
+def reset_token_usage():
+    """Clear all token usage history."""
+    _save_token_usage({"sessions": []})
+    return jsonify({"ok": True})
+
 if __name__ == "__main__":
     raw_port = os.environ.get("STAR_BACKEND_PORT", "19000")
     try:

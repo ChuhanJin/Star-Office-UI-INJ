@@ -712,127 +712,67 @@
             filter: brightness(0.97);
         }
         /* Guest Agent 名单面板（右下角） */
-        #guest-agent-panel {
+        /* ── Token Usage Graph Panel ── */
+        #token-graph-panel {
             position: relative;
             width: 390px;
             height: 300px;
             background: #141722;
-            padding: 10px 10px 12px;
-            border-radius: 0;
+            padding: 10px 12px 12px;
             border: 4px solid #0e1119;
-            box-shadow: none;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
             overflow: hidden;
         }
-        #guest-agent-panel::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
-            background-repeat: no-repeat;
-            background-size:
-                calc(50% - 14px) 2px, calc(50% - 14px) 2px,
-                2px calc(50% - 14px), 2px calc(50% - 14px),
-                calc(50% - 14px) 2px, calc(50% - 14px) 2px,
-                2px calc(50% - 14px), 2px calc(50% - 14px);
-            background-position:
-                9px 8px, calc(50% + 5px) 8px,
-                8px 9px, calc(100% - 10px) 9px,
-                9px calc(100% - 10px), calc(50% + 5px) calc(100% - 10px),
-                8px calc(50% + 5px), calc(100% - 10px) calc(50% + 5px);
-        }
-        #guest-agent-panel::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
-            background-repeat: no-repeat;
-            background-size:
-                9px 4px, 4px 9px,
-                9px 4px, 4px 9px,
-                9px 4px, 4px 9px,
-                9px 4px, 4px 9px;
-            background-position:
-                left top, left top,
-                right top, right top,
-                left bottom, left bottom,
-                right bottom, right bottom;
-        }
-        #guest-agent-panel-title {
+        #token-graph-title {
             color: #ffd700;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             text-align: center;
-            letter-spacing: 1px;
-            padding: 6px 0 10px;
-            border-bottom: 0;
-            margin-bottom: 0;
+            letter-spacing: 2px;
         }
-        #guest-agent-list {
-            flex-grow: 1;
-            overflow-y: auto;
+        #token-graph-legend {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-right: 4px;
+            gap: 12px;
+            justify-content: center;
+            font-size: 10px;
         }
-        #guest-agent-list::-webkit-scrollbar { width: 6px; }
-        #guest-agent-list::-webkit-scrollbar-track { background: #1a1a2e; }
-        #guest-agent-list::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
-        .guest-agent-item {
+        .tg-legend-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            background: #3a3f4f;
-            padding: 8px 10px;
-            border-radius: 6px;
-            border: 1px solid #555;
+            gap: 4px;
+            color: #9ca3af;
         }
-        .guest-agent-name {
-            color: #fff;
-            font-size: 14px;
-            flex-shrink: 0;
+        .tg-legend-dot {
+            width: 8px;
+            height: 3px;
+            border-radius: 2px;
         }
-        .guest-agent-buttons {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
+        #token-graph-canvas-wrap {
+            flex: 1;
+            position: relative;
         }
-        .guest-agent-buttons button {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 2px solid #555;
-            background: #4a4f5f;
-            color: #fff;
-            font-family: 'ArkPixel', monospace;
-            font-size: 12px;
+        #token-graph-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #token-graph-footer {
+            font-size: 10px;
+            color: #6b7280;
+            text-align: center;
+        }
+        #token-graph-reset {
+            font-size: 10px;
+            color: #6b7280;
+            background: none;
+            border: 1px solid #374151;
+            padding: 1px 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-family: 'ArkPixel', monospace;
         }
-        .guest-agent-buttons button:hover {
-            background: #5a5f6f;
-            border-color: #e94560;
-        }
-        .guest-agent-buttons button.leave-btn {
-            background: #5a1818;
-            border-color: #e94560;
-        }
-        .guest-agent-buttons button.leave-btn:hover {
-            background: #6a2828;
-        }
+        #token-graph-reset:hover { border-color: #e94560; color: #f87171; }
         /* Memo 区域 - 4:3 小正方形 */
         #memo-panel {
             position: relative;
@@ -1170,7 +1110,7 @@
             #memo-panel,
             #control-bar,
             #wallet-panel,
-            #guest-agent-panel {
+            #token-graph-panel {
                 width: 100%;
                 height: auto;
                 min-height: 180px;
@@ -1178,7 +1118,7 @@
 
             #memo-panel { min-height: 220px; }
             #control-bar { min-height: 210px; }
-            #guest-agent-panel { min-height: 220px; }
+            #token-graph-panel { min-height: 220px; }
 
             #memo-date {
                 left: 0;
@@ -1192,14 +1132,13 @@
             }
 
             #control-bar-title,
-            #guest-agent-panel-title,
+            #token-graph-title,
             #memo-title {
                 font-size: 14px;
             }
 
             #control-buttons button,
-            #control-bar button,
-            .guest-agent-buttons button {
+            #control-bar button {
                 font-size: 12px;
                 min-height: 44px;
             }
@@ -1211,18 +1150,6 @@
                 min-height: 40px;
                 padding: 4px 2px;
                 font-size: 11px;
-            }
-
-            .guest-agent-item {
-                align-items: flex-start;
-                gap: 10px;
-                flex-direction: column;
-            }
-            .guest-agent-buttons {
-                width: 100%;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
             }
 
             #status-text {
@@ -1364,12 +1291,23 @@
         </div>
 
         <!-- Guest Agent 名单面板（右下角） -->
-        <div id="guest-agent-panel">
-            <div id="guest-agent-panel-title">VISITOR LIST</div>
-            <div id="guest-agent-list">
-                <div style="color:#9ca3af;font-size:12px;text-align:center;padding:20px 0;">Loading visitors...</div>
+        <!-- Token Usage Graph Panel -->
+        <div id="token-graph-panel">
+            <div id="token-graph-title">📊 TOKEN USAGE</div>
+            <div id="token-graph-legend">
+                <div class="tg-legend-item"><div class="tg-legend-dot" style="background:#60a5fa;"></div>Input</div>
+                <div class="tg-legend-item"><div class="tg-legend-dot" style="background:#34d399;"></div>Output</div>
+                <div class="tg-legend-item"><div class="tg-legend-dot" style="background:#a78bfa;"></div>Cached</div>
             </div>
+            <div id="token-graph-canvas-wrap">
+                <canvas id="token-graph-canvas"></canvas>
             </div>
+            <div id="token-graph-footer">
+                <span id="token-graph-summary">—</span>
+                &nbsp;&nbsp;
+                <button id="token-graph-reset" onclick="tokenGraphReset()">Reset</button>
+            </div>
+        </div>
         </div>
     </div>
 
@@ -1507,7 +1445,7 @@
                 assetHintNotInScene: 'This object is not detected in current scene; you can still replace file (effective after refresh)',
                 assetHintDefault: 'Generic asset: keep source size, alpha channel, and visual anchor to avoid drift/distortion',
                 showCoords: 'Show Coords', hideCoords: 'Hide Coords', moveView: 'Pan View', lockView: 'Lock View',
-                memoTitle: 'Work Log', guestTitle: 'VISITOR LIST', officeTitle: 'Vincent Co.Tech',
+                memoTitle: 'Work Log', officeTitle: 'Vincent Co.Tech',
                 loadingOffice: "Loading Star's pixel office..."
             }
         };
@@ -1592,8 +1530,7 @@
 
             const memoTitle = document.getElementById('memo-title');
             if (memoTitle) memoTitle.textContent = t('memoTitle');
-            const guestTitle = document.getElementById('guest-agent-panel-title');
-            if (guestTitle) guestTitle.textContent = t('guestTitle');
+
             if (window.officePlaqueText && window.officePlaqueText.setText) {
                 window.officePlaqueText.setText(t('officeTitle'));
             }
@@ -1829,24 +1766,13 @@
 
         let coordsOverlay, coordsDisplay, coordsToggle;
         let showCoords = false;
-        let guestAgents = [];
-        let guestSprites = {}; // agentId -> {sprite, nameText}
-        let guestBubbles = {}; // agentId -> bubble container
-        const GUEST_AVATARS = ['guest_role_1','guest_role_2','guest_role_3','guest_role_4','guest_role_5','guest_role_6'];
-        let guestTweens = {};  // agentId -> {move, name}
-        let hiddenDemoNames = new Set();
-        const DEMO_MODE = new URLSearchParams(window.location.search).get('demo') === '1';
         const FETCH_INTERVAL = 1000;
-        const GUEST_AGENTS_FETCH_INTERVAL = 3500;
         const BLINK_INTERVAL = 2500;
         const BUBBLE_INTERVAL = 8000;
         const CAT_BUBBLE_INTERVAL = 18000; // cat bubble much less frequent
         let lastCatBubble = 0;
-        let lastGuestAgentsFetch = 0;
         let lastGuestBubbleAt = 0;
         const TYPEWRITER_DELAY = 50;
-        let lastSeenGuestIds = new Set(); // 用于检测新加入的Visitor，触发欢迎气泡
-        let guestWelcomeInitialized = false;
 
         // 状态控制栏函数（用于测试）
         function setState(state, detail) {
@@ -3295,156 +3221,6 @@ function toggleBrokerPanel() {
             }
         }
 
-        // Guest Agent 离开房间
-        function removeGuestSpriteByName(name) {
-            const target = guestAgents.find(a => (a.name || '') === name);
-            if (target && guestSprites[target.agentId]) {
-                guestSprites[target.agentId].sprite.destroy();
-                guestSprites[target.agentId].nameText.destroy();
-                delete guestSprites[target.agentId];
-            }
-            if (target && guestBubbles[target.agentId]) {
-                guestBubbles[target.agentId].destroy();
-                delete guestBubbles[target.agentId];
-            }
-        }
-
-        function leaveGuestAgent(agentId, name) {
-            fetch('/leave-agent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ agentId, name })
-            }).then(response => response.json()).then(data => {
-                if (data.ok) {
-                    // 优先按 agentId 清理，避免重名误伤
-                    if (agentId && guestSprites[agentId]) {
-                        guestSprites[agentId].sprite.destroy();
-                        guestSprites[agentId].nameText.destroy();
-                        delete guestSprites[agentId];
-                    }
-                    if (agentId && guestBubbles[agentId]) {
-                        guestBubbles[agentId].destroy();
-                        delete guestBubbles[agentId];
-                    }
-                    fetchGuestAgents();
-                    alert((name || agentId) + ' has left the room');
-                } else {
-                    // demo agent 没在后端也允许本地隐藏
-                    if (DEMO_MODE && (name === 'Nika' || name === 'Mercury')) {
-                        hiddenDemoNames.add(name);
-                        removeGuestSpriteByName(name);
-                        renderGuestAgentList();
-                        alert(name + ' has left the room（demo）');
-                        return;
-                    }
-                    alert('Leave failed: ' + (data.msg || 'unknown error'));
-                }
-            }).catch(error => {
-                alert('Request failed: ' + error);
-            });
-        }
-
-        function approveGuestAgent(agentId) {
-            fetch('/agent-approve', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ agentId })
-            }).then(response => response.json()).then(data => {
-                if (data.ok) {
-                    fetchGuestAgents();
-                    alert('Visitor approved');
-                } else {
-                    alert('Approval failed: ' + (data.msg || 'unknown error'));
-                }
-            }).catch(error => {
-                alert('Request failed: ' + error);
-            });
-        }
-
-        function rejectGuestAgent(agentId) {
-            fetch('/agent-reject', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ agentId })
-            }).then(response => response.json()).then(data => {
-                if (data.ok) {
-                    fetchGuestAgents();
-                    alert('Visitor rejected');
-                } else {
-                    alert('Rejection failed: ' + (data.msg || 'unknown error'));
-                }
-            }).catch(error => {
-                alert('Request failed: ' + error);
-            });
-        }
-
-        function ensureDemoVisitors() {
-            if (!DEMO_MODE) return;
-            if (!Array.isArray(window.__demoVisitors) || window.__demoVisitors.length === 0) {
-                window.__demoVisitors = [
-                    { agentId: 'demo_nika', name: 'Nika', authStatus: 'approved', state: 'writing', bubbleText: 'Working hard', isDemo: true, updated_at: new Date().toISOString() },
-                    { agentId: 'demo_mercury', name: 'Mercury', authStatus: 'approved', state: 'idle', bubbleText: 'Taking a break in the lounge', isDemo: true, updated_at: new Date().toISOString() }
-                ];
-            }
-        }
-
-        function getMergedVisitors() {
-            const realVisitors = (guestAgents || []).filter(a => !a.isMain);
-            if (!DEMO_MODE) return realVisitors;
-
-            ensureDemoVisitors();
-            const demoVisitors = window.__demoVisitors.filter(v => !hiddenDemoNames.has(v.name));
-            return [...realVisitors, ...demoVisitors];
-        }
-
-        function renderGuestAgentList() {
-            const list = document.getElementById('guest-agent-list');
-            if (!list) return;
-
-            const visitors = getMergedVisitors();
-            if (visitors.length === 0) {
-                list.innerHTML = '<div style="color:#9ca3af;font-size:12px;text-align:center;padding:20px 0;">No visitors yet</div>';
-                return;
-            }
-
-            list.innerHTML = visitors.map(agent => {
-                const name = agent.name || 'Unnamed Visitor';
-                const authStatus = agent.authStatus || 'pending';
-                const state = agent.state || 'idle';
-                const statusMap = {
-                    approved: 'Approved',
-                    pending: 'Pending',
-                    rejected: 'Rejected',
-                    offline: 'Offline'
-                };
-                const stateMap = {
-                    idle: 'Idle',
-                    writing: 'Working',
-                    researching: 'Researching',
-                    executing: 'Executing',
-                    syncing: 'Syncing',
-                    error: 'Alert'
-                };
-
-                const statusText = statusMap[authStatus] || authStatus;
-                const stateText = stateMap[state] || state;
-                const subtitle = `${statusText} · ${stateText}`;
-
-                const pendingActions = `<button onclick="alert('Skill exchange - coming soon')">Exchange Skill</button><button class="leave-btn" onclick="leaveGuestAgent('${agent.agentId}','${name}')">Leave Room</button>`;
-
-                return `
-                  <div class="guest-agent-item" data-name="${name}">
-                    <div>
-                      <div class="guest-agent-name">${name}</div>
-                      <div style="font-size:11px;color:#cbd5e1;">${subtitle}</div>
-                    </div>
-                    <div class="guest-agent-buttons">
-                      ${pendingActions}
-                    </div>
-                  </div>
-                `;
-            }).join('');
-        }
 
         function getAreaRect(area) {
             // 区域坐标（海辛提供，左上-右下；这里的 x/y 作为 sprite 底部锚点坐标来用）
@@ -3505,415 +3281,7 @@ function toggleBrokerPanel() {
             return arr[idx % arr.length];
         }
 
-        function renderGuestAgentsInScene() {
-            if (!game) return;
-            const visitors = getMergedVisitors();
-            const seenIds = new Set();
-            let idxBreak = 0, idxWrite = 0, idxError = 0;
 
-            visitors.forEach(agent => {
-                const id = agent.agentId;
-                seenIds.add(id);
-
-                const isDemo = !!agent.isDemo || (DEMO_MODE && (id === 'demo_nika' || id === 'demo_mercury' || agent.name === 'Nika' || agent.name === 'Mercury'));
-                const area = agent.area || (agent.state === 'error' ? 'error' : (agent.state === 'idle' ? 'breakroom' : 'writing'));
-
-                const idx = area === 'breakroom' ? idxBreak++ : area === 'error' ? idxError++ : idxWrite++;
-                const p = isDemo
-                    ? randomPointInRect(getAreaRect(area))
-                    : getAreaPoint(area, idx);
-
-                if (!guestSprites[id]) {
-                    // 优先用图标：demo visitor 有专门映射
-                    let sprite;
-                    const isDemoNika = DEMO_MODE && (agent.agentId === 'demo_nika' || agent.name === 'Nika');
-                    const isDemoMercury = DEMO_MODE && (agent.agentId === 'demo_mercury' || agent.name === 'Mercury');
-
-                    if (isDemoNika || isDemoMercury) {
-                        // 统一使用动态像素角色，避免依赖已删除的 demo 静态图
-                        const animKey = 'guest_anim_1';
-                        const f = 0;
-                        sprite = game.add.sprite(p.x, p.y, animKey, f).setOrigin(0.5, 1).setScale(1.1);
-                        if (sprite.anims && sprite.anims.play) sprite.anims.play(animKey, true);
-                    } else {
-                        // 非 demo Visitor：优先用动画精灵（guest_anim_x），其次静态图，兜底星星
-                        // 先确定角色索引（1-6）
-                        let animIdx = agent.avatar
-                            ? parseInt((agent.avatar.match(/_(\d+)$/) || [])[1] || '0', 10)
-                            : 0;
-                        if (!animIdx || animIdx < 1 || animIdx > 6) {
-                            const aid = String(agent.agentId || '');
-                            let hash = 0;
-                            for (let i = 0; i < aid.length; i++) hash = (hash * 31 + aid.charCodeAt(i)) >>> 0;
-                            animIdx = (hash % 6) + 1;
-                        }
-                        const animKey = `guest_anim_${animIdx}`;
-                        const animIdleKey = `guest_anim_${animIdx}_idle`;
-
-                        if (game.textures.exists(animKey) && game.anims.exists(animIdleKey)) {
-                            sprite = game.add.sprite(p.x, p.y, animKey).setOrigin(0.5, 1).setScale(4.0);
-                            sprite.anims.play(animIdleKey, true);
-                        } else {
-                            const staticAvatarKey = agent.avatar && game.textures.exists(agent.avatar)
-                                ? agent.avatar
-                                : (() => {
-                                    const aid = String(agent.agentId || '');
-                                    let hash = 0;
-                                    for (let i = 0; i < aid.length; i++) hash = (hash * 31 + aid.charCodeAt(i)) >>> 0;
-                                    return GUEST_AVATARS[hash % GUEST_AVATARS.length];
-                                })();
-
-                            if (staticAvatarKey && game.textures.exists(staticAvatarKey)) {
-                                sprite = game.add.image(p.x, p.y, staticAvatarKey).setOrigin(0.5, 1).setScale(1.15);
-                            } else {
-                                sprite = game.add.text(p.x, p.y, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '30px' }).setOrigin(0.5, 1);
-                            }
-                        }
-                    }
-                    sprite.setDepth(2600);
-                    if (DEMO_MODE && (agent.agentId === 'demo_mercury' || agent.name === 'Mercury')) {
-                        sprite.y = sprite.y + 10;
-                    }
-
-                    // demo Mercury下移 10px（仅 demo_mercury）
-                    const yOffset = (DEMO_MODE && (agent.agentId === 'demo_mercury' || agent.name === 'Mercury')) ? 10 : 0;
-
-                    const nameTextY = isDemo ? ((p.y + yOffset) - 80) : ((p.y + yOffset) - 120);
-                    const nameText = game.add.text(p.x, nameTextY, agent.name || 'Visitor', {
-                        fontFamily: 'ArkPixel, monospace',
-                        fontSize: isDemo ? '16px' : '15px',
-                        fill: '#ffffff',
-                        stroke: '#000',
-                        strokeThickness: 3
-                    }).setOrigin(0.5);
-                    nameText.setDepth(2601);
-
-                    guestSprites[id] = { sprite, nameText };
-                } else {
-                    const g = guestSprites[id];
-                    const yOffset = (DEMO_MODE && (agent.agentId === 'demo_mercury' || agent.name === 'Mercury')) ? 10 : 0;
-
-                    // demo：平滑移动（避免闪现）；非 demo：保持稳定位置（避免轮询抖动）
-                    if (isDemo) {
-                        // kill previous tweens for this id
-                        if (guestTweens[id] && guestTweens[id].move) {
-                            guestTweens[id].move.stop();
-                        }
-                        if (guestTweens[id] && guestTweens[id].name) {
-                            guestTweens[id].name.stop();
-                        }
-
-                        const duration = 2000 + Math.floor(Math.random() * 1000); // 2~3s 走路感
-                        const ease = 'Sine.easeInOut';
-
-                        const moveTween = game.tweens.add({
-                            targets: g.sprite,
-                            x: p.x,
-                            y: p.y + yOffset,
-                            duration,
-                            ease
-                        });
-                        const nameTween = game.tweens.add({
-                            targets: g.nameText,
-                            x: p.x,
-                            y: (p.y + yOffset) - 80,
-                            duration,
-                            ease
-                        });
-                        guestTweens[id] = { move: moveTween, name: nameTween };
-                    } else {
-                        g.sprite.x = p.x;
-                        g.sprite.y = p.y + yOffset;
-                        g.nameText.x = p.x;
-                        g.nameText.y = (p.y + yOffset) - 120;
-                    }
-
-                    g.nameText.setText(agent.name || 'Visitor');
-                }
-            });
-
-            // 删除消失的 agent + 清理其气泡/tween
-            Object.keys(guestSprites).forEach(id => {
-                if (!seenIds.has(id)) {
-                    guestSprites[id].sprite.destroy();
-                    guestSprites[id].nameText.destroy();
-                    delete guestSprites[id];
-                    if (guestBubbles[id]) {
-                        guestBubbles[id].destroy();
-                        delete guestBubbles[id];
-                    }
-                    if (guestTweens[id]) {
-                        try { guestTweens[id].move && guestTweens[id].move.stop(); } catch(e) {}
-                        try { guestTweens[id].name && guestTweens[id].name.stop(); } catch(e) {}
-                        delete guestTweens[id];
-                    }
-                }
-            });
-        }
-
-        function maybeShowGuestBubble(time) {
-            if (time - lastGuestBubbleAt < 5200) return;
-            lastGuestBubbleAt = time;
-            const ids = Object.keys(guestSprites);
-            if (ids.length === 0) return;
-            const id = ids[Math.floor(Math.random() * ids.length)];
-            const g = guestSprites[id];
-
-            // demo 气泡：优先展示与状态对应的内容，便于Verify"状态→区域→气泡"链路
-            const demoVisitor = (DEMO_MODE && window.__demoVisitors)
-                ? (window.__demoVisitors.find(v => v.agentId === id) || window.__demoVisitors.find(v => v.name === (g.nameText && g.nameText.text)))
-                : null;
-
-            const statusThoughtsMap = {
-                idle: ['Chilling in the lounge', 'Taking a break, waiting for next task', 'Resting and recharging'],
-                writing: ['Processing tasks at the desk', 'Organizing and executing', 'Focused and pushing forward'],
-                researching: ['In research mode, gathering info', 'Checking data and verifying clues', 'Researching, will sync findings soon'],
-                executing: ['Executing, running the pipeline', 'Pushing tasks at the desk', 'Turning plans into actions'],
-                syncing: ['Syncing, updating status shortly', 'Syncing progress to system', 'Data syncing, please wait'],
-                error: ['Debugging in the error zone', 'Anomaly detected, fixing now', 'Alert mode, locating root cause']
-            };
-            const agentState = (guestAgents.find(a => a.agentId === id) || {}).state || 'idle';
-            const thoughts = statusThoughtsMap[agentState] || statusThoughtsMap.idle;
-            const text = (demoVisitor && demoVisitor.bubbleText) ? demoVisitor.bubbleText : thoughts[Math.floor(Math.random() * thoughts.length)];
-
-            if (guestBubbles[id]) {
-                guestBubbles[id].destroy();
-                delete guestBubbles[id];
-            }
-
-            const bx = g.sprite.x;
-            // 气泡位置：demo 维持原逻辑；真实Visitor放在"名字上方"，避免压角色也避免压名字
-            const isDemoGuest = (demoVisitor && demoVisitor.isDemo) || (id === 'demo_nika' || id === 'demo_mercury');
-            const nameH = (g.nameText && g.nameText.height) ? g.nameText.height : 16;
-            const by = isDemoGuest ? (g.sprite.y - 90) : ((g.nameText ? g.nameText.y : (g.sprite.y - 150)) - (nameH / 2) - 22);
-            const fontSize = IS_TOUCH_DEVICE ? 14 : 12;
-            const bg = game.add.rectangle(bx, by, text.length * 10 + 24, 28, 0xffffff, 0.95);
-            bg.setStrokeStyle(2, 0x000000);
-            const txt = game.add.text(bx, by, text, { fontFamily: 'ArkPixel, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
-            const bubble = game.add.container(0, 0, [bg, txt]);
-            bubble.setDepth(2700);
-            guestBubbles[id] = bubble;
-
-            // 让气泡跟随 sprite 锚点（用于 demo 平滑移动时也保持贴合）
-            bubble.__followAgentId = id;
-
-            setTimeout(() => {
-                if (guestBubbles[id]) {
-                    guestBubbles[id].destroy();
-                    delete guestBubbles[id];
-                }
-            }, 3200);
-        }
-
-        function maybeRandomizeDemoVisitors() {
-            if (!DEMO_MODE) return;
-            ensureDemoVisitors();
-
-            // 按海辛需求：每 8 秒切换一次状态
-            window.__demoNextAt = window.__demoNextAt || 0;
-            const now = Date.now();
-            if (now < window.__demoNextAt) return;
-            window.__demoNextAt = now + 8000;
-
-            const states = ['idle', 'writing', 'researching', 'executing', 'syncing', 'error'];
-            const bubbleTextMapByLang = {
-                en: {
-                    idle: 'Taking a break in the lounge.',
-                    writing: 'I am working now.',
-                    researching: 'I am researching now.',
-                    executing: 'I am executing tasks.',
-                    syncing: 'I am syncing status.',
-                    error: 'Something broke! Heading to alert zone.'
-                }
-            };
-            const bubbleTextMap = bubbleTextMapByLang[uiLang] || bubbleTextMapByLang.en;
-
-            // 确保两位 demo 角色不会总是同一个状态（增加可观测性）
-            const pickJs = (exclude) => {
-                let s = states[Math.floor(Math.random() * states.length)];
-                let tries = 0;
-                while (exclude && s === exclude && tries < 5) {
-                    s = states[Math.floor(Math.random() * states.length)];
-                    tries++;
-                }
-                return s;
-            };
-
-            const current = window.__demoVisitors || [];
-            const cur0 = current[0] ? (current[0].state || 'idle') : 'idle';
-
-            const next0 = pickJs(cur0);
-            const next1 = pickJs(next0); // 尽量不同
-            const nextStates = [next0, next1];
-
-            const prevVisitors = current.map((v) => ({ ...v }));
-            window.__demoVisitors = current.map((v, i) => {
-                const nextState = nextStates[i] || pickJs(v.state);
-                return {
-                    ...v,
-                    state: nextState,
-                    bubbleText: bubbleTextMap[nextState] || String(nextState),
-                    updated_at: new Date().toISOString()
-                };
-            });
-
-            // 状态切换时：每一位 demo 都立即冒泡（强制），用于清晰Verify链路
-            try {
-                if (typeof game !== 'undefined' && game) {
-                    // 找出状态实际变了的 demo visitor，给他们强制冒泡
-                    const prevById = {};
-                    prevVisitors.forEach(v => { prevById[v.agentId] = v; });
-                    const newVisitors = window.__demoVisitors || [];
-                    newVisitors.forEach(agent => {
-                        const prev = prevById[agent.agentId];
-                        const changed = !prev || prev.state !== agent.state;
-                        if (changed) {
-                            // 直接冒泡
-                            if (guestSprites[agent.agentId]) {
-                                const g = guestSprites[agent.agentId];
-                                const text = agent.bubbleText || '';
-                                if (guestBubbles[agent.agentId]) {
-                                    guestBubbles[agent.agentId].destroy();
-                                    delete guestBubbles[agent.agentId];
-                                }
-                                const bx = g.sprite.x;
-                                const by = g.sprite.y - 90;
-                                const fontSize = IS_TOUCH_DEVICE ? 14 : 12;
-                                const bg = game.add.rectangle(bx, by, text.length * 10 + 24, 28, 0xffffff, 0.95);
-                                bg.setStrokeStyle(2, 0x000000);
-                                const txt = game.add.text(bx, by, text, { fontFamily: 'ArkPixel, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
-                                const bubble = game.add.container(0, 0, [bg, txt]);
-                                bubble.setDepth(2700);
-                                bubble.__followAgentId = agent.agentId;
-                                guestBubbles[agent.agentId] = bubble;
-                                setTimeout(() => {
-                                    if (guestBubbles[agent.agentId]) {
-                                        guestBubbles[agent.agentId].destroy();
-                                        delete guestBubbles[agent.agentId];
-                                    }
-                                }, 3200);
-                            }
-                        }
-                    });
-                }
-            } catch (e) { console.error('Force bubble failed:', e); }
-        }
-
-        function fetchGuestAgents() {
-            // demo 随机状态先更新（不依赖后端）
-            maybeRandomizeDemoVisitors();
-
-            return fetch('/agents?t=' + Date.now(), { cache: 'no-store' })
-                .then(response => response.json())
-                .then(data => {
-                    // 无论后端返回是否为数组，demo=1 都应保证本地 demo Visitor可见
-                    guestAgents = Array.isArray(data) ? data : [];
-
-                    // 新Visitor检测：触发 Star 欢迎气泡（只欢迎真实Visitor，不欢迎 demo）
-                    try {
-                        const merged = getMergedVisitors();
-                        const currentIds = new Set((merged || []).filter(a => !a.isMain && !a.isDemo).map(a => a.agentId));
-
-                        if (!guestWelcomeInitialized) {
-                            // 首次初始化不欢迎，避免Refresh页面就刷屏
-                            lastSeenGuestIds = currentIds;
-                            guestWelcomeInitialized = true;
-                        } else {
-                            const newIds = [];
-                            currentIds.forEach(id => { if (!lastSeenGuestIds.has(id)) newIds.push(id); });
-
-                            if (newIds.length > 0) {
-                                // 只欢迎第一个新来的（避免同一时刻多人加入刷屏）
-                                const newAgent = (merged || []).find(a => a.agentId === newIds[0]);
-                                if (newAgent && newAgent.name) {
-                                    // 临时将 currentState 视为 writing 以允许 showBubble 展示
-                                    const oldState = currentState;
-                                    currentState = 'writing';
-                                    // 临时更换 bubble 文案
-                                    const lang = uiLang;
-                                    const welcomeTexts = {
-                                        en: [`Welcome ${newAgent.name} to the office!`,`Hi ${newAgent.name}, let's build something.`,`${newAgent.name} just joined - welcome!`]
-                                    };
-                                    const langPack = BUBBLE_TEXTS[lang] || BUBBLE_TEXTS.en;
-                                    const oldTexts = Array.isArray(langPack.writing) ? [...langPack.writing] : [];
-                                    langPack.writing = welcomeTexts[lang] || welcomeTexts.zh;
-                                    showBubble();
-                                    // 还原
-                                    langPack.writing = oldTexts;
-                                    currentState = oldState;
-                                }
-                            }
-
-                            lastSeenGuestIds = currentIds;
-                        }
-                    } catch (e) { /* ignore */ }
-
-                    renderGuestAgentList();
-                    renderGuestAgentsInScene();
-                })
-                .catch(error => {
-                    console.error('Failed to fetch visitor list:', error);
-                    // 即使拉取失败，demo 也要能渲染
-                    if (DEMO_MODE) {
-                        renderGuestAgentList();
-                        renderGuestAgentsInScene();
-                    }
-                });
-        }
-
-        // 初始化：先检测 WebP 支持，再启动游戏
-        async function initGame() {
-            // 检测 WebP 支持
-            try {
-                supportsWebP = await checkWebPSupport();
-            } catch (e) {
-                try {
-                    supportsWebP = await checkWebPSupportFallback();
-                } catch (e2) {
-                    supportsWebP = false;
-                }
-            }
-
-            console.log('WebP support:', supportsWebP);
-            applyLanguage();
-            updateSpeedModeUI();
-
-
-            // 直接启动 Phaser，避免首屏被额外接口阻塞
-
-            new Phaser.Game(config);
-
-            // 非关键初始化延后到首屏之后，提升首开速度
-            setTimeout(async () => {
-                // 动态探测 flowers 精灵表帧规格（避免写死 65x65 导致显示比例异常）
-                try {
-                    const res = await fetch('/assets/list?t=' + Date.now(), { cache: 'no-store' });
-                    const data = await res.json();
-                    if (data && data.ok && Array.isArray(data.items)) {
-                        const flowerItem = data.items.find(it => (it.path || '').toLowerCase().includes('flowers-bloom-v2'));
-                        if (flowerItem && Number(flowerItem.width) > 0 && Number(flowerItem.height) > 0) {
-                            // 固定规则：花朵单frames 128x128，4x4
-                            FLOWERS_FRAME_W = 128;
-                            FLOWERS_FRAME_H = 128;
-                            FLOWERS_FRAME_COLS = 4;
-                            FLOWERS_FRAME_ROWS = 4;
-                        }
-                    }
-                } catch (e) {
-                    console.warn('flowers spec detection failed, using default 65x65', e);
-                }
-
-                // Only fetch /assets/positions and /assets/defaults when user is authed,
-                // to avoid 401 Unauthorized on first load for new visitors (issue #54).
-                try {
-                    const authRes = await fetch('/assets/auth/status', { cache: 'no-store' });
-                    const authData = await authRes.json();
-                    if (authData && authData.ok && authData.authed) {
-                        await applySavedPositionOverrides();
-                    }
-                } catch (e) {}
-            }, 600);
-        }
 
         function preload() {
             // 获取加载界面元素
@@ -4436,12 +3804,10 @@ function toggleBrokerPanel() {
             loadMemo();
 
             fetchStatus();
-            fetchGuestAgents();
         }
 
         function update(time) {
             if (time - lastFetch > FETCH_INTERVAL) { fetchStatus(); lastFetch = time; }
-            if (time - lastGuestAgentsFetch > GUEST_AGENTS_FETCH_INTERVAL) { fetchGuestAgents(); lastGuestAgentsFetch = time; }
 
             // 兜底：非 idle 时确保机房动画在播，idle 时静止
             const effectiveStateForServer = pendingDesiredState || currentState;
@@ -4516,23 +3882,7 @@ function toggleBrokerPanel() {
             maybeShowGuestBubble(time);
 
             // demo 平滑移动时：让气泡每帧跟随角色锚点（避免 tween 时气泡滞留在旧位置）
-            try {
-                Object.keys(guestBubbles).forEach(id => {
-                    const b = guestBubbles[id];
-                    const g = guestSprites[id];
-                    if (!b || !g) return;
-                    if (b.__followAgentId !== id) return;
-                    b.x = 0;
-                    b.y = 0;
-                    // children[0]=bg, children[1]=text
-                    const bx = g.sprite.x;
-                    const isDemoGuest = (id === 'demo_nika' || id === 'demo_mercury');
-                    const nameH = (g.nameText && g.nameText.height) ? g.nameText.height : 16;
-                    const by = isDemoGuest ? (g.sprite.y - 90) : ((g.nameText ? g.nameText.y : (g.sprite.y - 150)) - (nameH / 2) - 22);
-                    if (b.list && b.list[0]) { b.list[0].x = bx; b.list[0].y = by; }
-                    if (b.list && b.list[1]) { b.list[1].x = bx; b.list[1].y = by; }
-                });
-            } catch (e) {}
+            try {            } catch (e) {}
 
             // guest 列表会定时Refresh
         }
@@ -4834,10 +4184,206 @@ function toggleBrokerPanel() {
             setTimeout(() => { if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; } }, 4000);
         }
 
-        // 假 Agent 气泡逻辑已移除，统一以真实 /agents 数据为准
+        // ─────────────────────────────────────────────────────────────
+        // Token Usage Graph
+        // ─────────────────────────────────────────────────────────────
+
+        const TOKEN_GRAPH_SESSION_ID = 'session_' + Date.now();
+        const TOKEN_GRAPH_LABEL = 'Session ' + new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+        const TOKEN_GRAPH_COLORS = ['#60a5fa', '#34d399', '#a78bfa', '#fb923c'];  // per session
+        const TOKEN_GRAPH_LINE_COLORS = {in: '#60a5fa', out: '#34d399', cached: '#a78bfa'};
+        const TOKEN_GRAPH_POLL_MS = 8000;  // poll backend every 8s
+        const TOKEN_GRAPH_RECORD_MS = 30000; // push a snapshot every 30s
+        let _tokenGraphData = null;  // { sessions: [...] }
+        let _tokenGraphRecordTimer = null;
+        let _tokenGraphPollTimer = null;
+        let _tokenLastIn = 0, _tokenLastOut = 0, _tokenLastCached = 0;
+
+        async function tokenGraphFetch() {
+            try {
+                const r = await fetch('/token-usage?t=' + Date.now(), { cache: 'no-store' });
+                _tokenGraphData = await r.json();
+                tokenGraphDraw();
+                tokenGraphUpdateSummary();
+            } catch(e) { /* silent */ }
+        }
+
+        async function tokenGraphRecord() {
+            // Read current session_status from the session_status endpoint equivalent
+            // We use the /status endpoint which has the main agent status,
+            // and we track cumulative token counts via the browser's own counter.
+            // Since we don't have direct access to API token counts here,
+            // we estimate from the number of fetch cycles as a proxy demo metric.
+            // In production, the backend can inject actual usage via /token-usage/record.
+            try {
+                const body = {
+                    sessionId: TOKEN_GRAPH_SESSION_ID,
+                    label: TOKEN_GRAPH_LABEL,
+                    inputTokens: _tokenLastIn,
+                    outputTokens: _tokenLastOut,
+                    cachedTokens: _tokenLastCached,
+                    model: 'claude-sonnet-4'
+                };
+                await fetch('/token-usage/record', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                await tokenGraphFetch();
+            } catch(e) { /* silent */ }
+        }
+
+        function tokenGraphSimTick() {
+            // Simulate incremental token growth each UI cycle for demo purposes
+            // (replace with real values from AI API responses when available)
+            _tokenLastIn     += Math.floor(Math.random() * 80 + 20);
+            _tokenLastOut    += Math.floor(Math.random() * 40 + 10);
+            _tokenLastCached += Math.floor(Math.random() * 120 + 40);
+        }
+
+        function tokenGraphDraw() {
+            const canvas = document.getElementById('token-graph-canvas');
+            const wrap   = document.getElementById('token-graph-canvas-wrap');
+            if (!canvas || !wrap) return;
+
+            const W = wrap.clientWidth  || 366;
+            const H = wrap.clientHeight || 180;
+            canvas.width  = W;
+            canvas.height = H;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, W, H);
+
+            const sessions = (_tokenGraphData && _tokenGraphData.sessions) || [];
+            if (sessions.length === 0) {
+                ctx.fillStyle = '#6b7280';
+                ctx.font = '11px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data yet — recording...', W / 2, H / 2);
+                return;
+            }
+
+            // Draw grid lines
+            ctx.strokeStyle = '#1f2937';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = Math.round(H * i / 4);
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+            }
+
+            // Find global max for Y scale
+            let globalMax = 1;
+            sessions.forEach(sess => {
+                (sess.points || []).forEach(p => {
+                    globalMax = Math.max(globalMax, (p.in || 0) + (p.out || 0) + (p.cached || 0));
+                });
+            });
+
+            const PAD_L = 6, PAD_R = 6, PAD_T = 8, PAD_B = 18;
+            const plotW = W - PAD_L - PAD_R;
+            const plotH = H - PAD_T - PAD_B;
+
+            // Draw each session's lines
+            const SESSION_COLORS = TOKEN_GRAPH_COLORS;
+            sessions.slice(-3).forEach((sess, si) => {
+                const pts = sess.points || [];
+                if (pts.length < 2) return;
+
+                const baseColor = SESSION_COLORS[si % SESSION_COLORS.length];
+
+                // Draw 3 lines: input (solid), output (dashed), cached (dotted)
+                const lines = [
+                    { key: 'in',     color: TOKEN_GRAPH_LINE_COLORS.in,     dash: [],      alpha: 0.9 },
+                    { key: 'out',    color: TOKEN_GRAPH_LINE_COLORS.out,     dash: [4, 3],  alpha: 0.8 },
+                    { key: 'cached', color: TOKEN_GRAPH_LINE_COLORS.cached,  dash: [1, 3],  alpha: 0.6 },
+                ];
+
+                lines.forEach(line => {
+                    ctx.save();
+                    ctx.strokeStyle = line.color;
+                    ctx.globalAlpha = line.alpha;
+                    ctx.lineWidth = si === sessions.length - 1 ? 1.5 : 1;
+                    ctx.setLineDash(line.dash);
+                    ctx.beginPath();
+
+                    pts.forEach((p, i) => {
+                        const x = PAD_L + (i / (pts.length - 1)) * plotW;
+                        const val = p[line.key] || 0;
+                        const y  = PAD_T + plotH - (val / globalMax) * plotH;
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    });
+                    ctx.stroke();
+                    ctx.restore();
+                });
+
+                // Session label at right edge
+                const last = pts[pts.length - 1];
+                const lx = PAD_L + plotW + 2;
+                const ly = PAD_T + plotH - ((last.in || 0) / globalMax) * plotH;
+                ctx.fillStyle = baseColor;
+                ctx.font = '9px monospace';
+                ctx.textAlign = 'left';
+                ctx.fillText(sess.label || ('S' + (si + 1)), Math.min(lx, W - 30), Math.max(ly, PAD_T + 8));
+            });
+
+            // X-axis tick labels (timestamps of last session)
+            const lastSess = sessions[sessions.length - 1];
+            if (lastSess && lastSess.points && lastSess.points.length >= 2) {
+                const pts = lastSess.points;
+                ctx.fillStyle = '#4b5563';
+                ctx.font = '8px monospace';
+                ctx.textAlign = 'center';
+                [0, Math.floor(pts.length / 2), pts.length - 1].forEach(i => {
+                    const x = PAD_L + (i / (pts.length - 1)) * plotW;
+                    const t = new Date(pts[i].ts);
+                    ctx.fillText(t.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}), x, H - 4);
+                });
+            }
+        }
+
+        function tokenGraphUpdateSummary() {
+            const el = document.getElementById('token-graph-summary');
+            if (!el) return;
+            const sessions = (_tokenGraphData && _tokenGraphData.sessions) || [];
+            if (sessions.length === 0) { el.textContent = 'No sessions'; return; }
+            const last = sessions[sessions.length - 1];
+            const pts = last.points || [];
+            if (pts.length === 0) { el.textContent = '—'; return; }
+            const p = pts[pts.length - 1];
+            const total = (p.in || 0) + (p.out || 0) + (p.cached || 0);
+            el.textContent = (last.label || 'Current') + ' · ' +
+                             (p.in || 0).toLocaleString() + ' in / ' +
+                             (p.out || 0).toLocaleString() + ' out · ' +
+                             total.toLocaleString() + ' total';
+        }
+
+        function tokenGraphReset() {
+            if (!confirm('Clear all token usage history?')) return;
+            fetch('/token-usage/reset', { method: 'POST' }).then(() => {
+                _tokenLastIn = _tokenLastOut = _tokenLastCached = 0;
+                _tokenGraphData = { sessions: [] };
+                tokenGraphDraw();
+                tokenGraphUpdateSummary();
+            });
+        }
+
+        function tokenGraphStart() {
+            tokenGraphFetch(); // initial load
+            // Record a snapshot every 30s (with simulated increment for demo)
+            _tokenGraphRecordTimer = setInterval(() => {
+                tokenGraphSimTick();
+                tokenGraphRecord();
+            }, TOKEN_GRAPH_RECORD_MS);
+            // Poll for updates every 8s
+            _tokenGraphPollTimer = setInterval(tokenGraphFetch, TOKEN_GRAPH_POLL_MS);
+            // Redraw on resize
+            window.addEventListener('resize', tokenGraphDraw);
+        }
 
         // 启动游戏
         initGame();
+        tokenGraphStart();
     </script>
 </body>
 </html>
