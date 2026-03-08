@@ -1,1 +1,1 @@
-[executing] Replacing visitor list with token consumption graph
+[executing] Fix initGame deleted accidentally
