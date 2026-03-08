@@ -288,9 +288,11 @@ const ViemWallet = (() => {
         addr.title = state.account; // show full address on hover
       }
       if (badge) {
+        const isTestnet = state.network === 'testnet';
         badge.style.display = 'inline-block';
-        badge.textContent = state.network === 'testnet' ? 'TESTNET' : 'MAINNET';
-        badge.className = state.network === 'testnet' ? 'testnet' : '';
+        badge.textContent = isTestnet ? 'TESTNET ⇄' : 'MAINNET ⇄';
+        badge.className = isTestnet ? 'testnet' : '';
+        badge.title = isTestnet ? 'Click to switch to Mainnet' : 'Click to switch to Testnet';
       }
       if (denom) denom.style.display = 'inline';
       if (btnConnect) btnConnect.style.display = 'none';
@@ -345,6 +347,9 @@ const ViemWallet = (() => {
     if (btnConnect) { btnConnect.disabled = true; btnConnect.textContent = '⏳ Connecting...'; }
 
     try {
+      // Clear disconnect flag — user is explicitly re-connecting
+      try { sessionStorage.removeItem('wallet_disconnected'); } catch (_) {}
+
       clearError();
       showError('Opening MetaMask...');
 
@@ -434,7 +439,24 @@ const ViemWallet = (() => {
     }
   }
 
-  function disconnect() {
+  async function disconnect() {
+    // Try wallet_revokePermissions (EIP-2255) to actually disconnect from MetaMask
+    // Falls back to local state clear only if not supported
+    try {
+      if (state.provider) {
+        await state.provider.request({
+          method: 'wallet_revokePermissions',
+          params: [{ eth_accounts: {} }],
+        });
+      }
+    } catch (e) {
+      // Not supported in older MetaMask — local state clear is the best we can do
+      console.log('wallet_revokePermissions not supported, clearing local state only.');
+    }
+
+    // Set a session flag so init() does not auto-reconnect on page reload
+    try { sessionStorage.setItem('wallet_disconnected', '1'); } catch (_) {}
+
     state.connected = false;
     state.account = null;
     state.balance = '0';
@@ -443,7 +465,6 @@ const ViemWallet = (() => {
     updateUI();
     stopAutoRefresh();
     clearError();
-    // Brief confirmation message
     showError('Disconnected.');
     setTimeout(() => clearError(), 2000);
   }
@@ -456,8 +477,16 @@ const ViemWallet = (() => {
     }
 
     await initProvider();
+
+    // If user explicitly disconnected this session, don't auto-reconnect
+    try {
+      if (sessionStorage.getItem('wallet_disconnected') === '1') {
+        updateUI();
+        return true;
+      }
+    } catch (_) {}
     
-    // Check if already connected
+    // Check if already connected (MetaMask remembers approval)
     try {
       const accounts = await state.provider.request({
         method: 'eth_accounts',

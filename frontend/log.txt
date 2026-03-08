@@ -1,1 +1,1 @@
-[executing] Adding wallet connect/disconnect toggle
+[executing] Fixing disconnect + network toggle

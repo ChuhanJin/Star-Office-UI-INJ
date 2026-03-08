@@ -1031,10 +1031,25 @@
             background: #1e40af;
             color: #93c5fd;
             letter-spacing: 1px;
+            border: 1px solid #3b82f6;
+            cursor: pointer;
+            font-family: 'ArkPixel', 'Courier New', monospace;
+            transition: background .15s, border-color .15s;
+        }
+        #wallet-network-badge:hover {
+            background: #2563eb;
+            border-color: #60a5fa;
+            color: #fff;
         }
         #wallet-network-badge.testnet {
             background: #854d0e;
             color: #fde68a;
+            border-color: #d97706;
+        }
+        #wallet-network-badge.testnet:hover {
+            background: #92400e;
+            border-color: #f59e0b;
+            color: #fff;
         }
         #wallet-panel button {
             font-family: 'ArkPixel', 'Courier New', monospace;
@@ -1328,7 +1343,7 @@
             <div id="wallet-balance-display">
                 <span class="amount" id="wallet-balance-amount">—</span>
                 <span class="denom" id="wallet-balance-denom" style="display:none;">INJ</span>
-                <span id="wallet-network-badge" style="display:none;">MAINNET</span>
+                <button id="wallet-network-badge" onclick="walletToggleNetwork()" title="Click to switch network" style="display:none;">MAINNET</button>
             </div>
             <div id="wallet-actions">
                 <!-- Connect button (shown when disconnected) -->
@@ -1338,7 +1353,6 @@
                 <!-- Secondary actions (shown when connected) -->
                 <div id="wallet-actions-secondary" style="display:none;">
                     <button id="btn-wallet-refresh" onclick="walletRefreshBalance()">↻ Refresh</button>
-                    <button id="btn-wallet-network-toggle" onclick="walletToggleNetwork()">🔄 Switch Network</button>
                 </div>
             </div>
             <div id="wallet-disconnected-hint">
