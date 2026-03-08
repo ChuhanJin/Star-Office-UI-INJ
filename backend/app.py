@@ -15,6 +15,14 @@ import threading
 from pathlib import Path
 from security_utils import is_production_mode, is_strong_secret, is_strong_drawer_pass
 from memo_utils import get_yesterday_date_str, sanitize_content, extract_memo_from_file
+from wallet_utils import (
+    ensure_injectived_installed,
+    connect_wallet,
+    get_wallet_balance,
+    list_wallets,
+    create_wallet,
+    send_transaction,
+)
 from store_utils import (
     load_agents_state as _store_load_agents_state,
     save_agents_state as _store_save_agents_state,
@@ -2042,6 +2050,187 @@ def assets_upload():
         return jsonify({"ok": True, "path": rel_path, "size": st.st_size, "backup": backup})
     except Exception as e:
         return jsonify({"ok": False, "msg": str(e)}), 500
+
+
+# ============================================================================
+# Wallet & Injective Integration Routes
+# ============================================================================
+
+@app.route("/wallet/health", methods=["GET"])
+def wallet_health():
+    """Check if injective CLI is available"""
+    try:
+        if ensure_injectived_installed():
+            return jsonify({"ok": True, "status": "injective-cli available"})
+        return jsonify({"ok": False, "status": "injective-cli not available"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/wallet/connect", methods=["POST"])
+def wallet_connect():
+    """Connect to a wallet. 
+    
+    Optional POST data:
+    - wallet_name: specific wallet to connect (string)
+    - is_testnet: use testnet (boolean, default false)
+    """
+    try:
+        data = request.get_json(silent=True) or {}
+        wallet_name = (data.get("wallet_name") or "").strip() or None
+        is_testnet = data.get("is_testnet", False)
+        
+        # Ensure injectived is available
+        if not ensure_injectived_installed():
+            return jsonify({
+                "ok": False,
+                "error": "injective-cli not available. Please install with: npm install -g injective-core@latest"
+            }), 503
+        
+        result = connect_wallet(wallet_name, is_testnet)
+        if not result.get("ok"):
+            return jsonify(result), 400
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/wallet/list", methods=["GET"])
+def wallet_list():
+    """List all available wallets"""
+    try:
+        if not ensure_injectived_installed():
+            return jsonify({
+                "ok": False,
+                "error": "injective-cli not available"
+            }), 503
+        
+        result = list_wallets()
+        if not result.get("ok"):
+            return jsonify(result), 400
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/wallet/create", methods=["POST"])
+def wallet_create():
+    """Create a new wallet.
+    
+    POST data (required):
+    - name: wallet name (string)
+    
+    Optional:
+    - passphrase: keystore passphrase (string)
+    """
+    try:
+        data = request.get_json(silent=True) or {}
+        name = (data.get("name") or "").strip()
+        passphrase = (data.get("passphrase") or "").strip()
+        
+        if not name:
+            return jsonify({"ok": False, "error": "Wallet name required"}), 400
+        
+        if not ensure_injectived_installed():
+            return jsonify({
+                "ok": False,
+                "error": "injective-cli not available"
+            }), 503
+        
+        result = create_wallet(name, passphrase)
+        if not result.get("ok"):
+            return jsonify(result), 400
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/wallet/balance", methods=["GET"])
+def wallet_balance():
+    """Query balance for an address.
+    
+    Query params:
+    - address: Injective address (required, string)
+    - is_testnet: use testnet (boolean, default false)
+    """
+    try:
+        address = (request.args.get("address") or "").strip()
+        is_testnet = request.args.get("is_testnet", "false").lower() == "true"
+        
+        if not address:
+            return jsonify({"ok": False, "error": "Address required"}), 400
+        
+        if not ensure_injectived_installed():
+            return jsonify({
+                "ok": False,
+                "error": "injective-cli not available"
+            }), 503
+        
+        result = get_wallet_balance(address, is_testnet)
+        if not result.get("ok"):
+            return jsonify(result), 400
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/wallet/send", methods=["POST"])
+def wallet_send():
+    """Send a transaction.
+    
+    POST data (required):
+    - from_address: sender address (string)
+    - to_address: recipient address (string)
+    - amount_inj: amount in INJ (float)
+    
+    Optional:
+    - wallet_name: wallet to use for signing (string)
+    - is_testnet: use testnet (boolean)
+    - passphrase: keystore passphrase (string)
+    """
+    try:
+        data = request.get_json(silent=True) or {}
+        from_address = (data.get("from_address") or "").strip()
+        to_address = (data.get("to_address") or "").strip()
+        amount_inj = data.get("amount_inj")
+        wallet_name = (data.get("wallet_name") or "").strip() or None
+        is_testnet = data.get("is_testnet", False)
+        passphrase = (data.get("passphrase") or "").strip()
+        
+        if not (from_address and to_address and amount_inj):
+            return jsonify({
+                "ok": False,
+                "error": "from_address, to_address, and amount_inj required"
+            }), 400
+        
+        try:
+            amount_inj = float(amount_inj)
+            if amount_inj <= 0:
+                raise ValueError("Amount must be > 0")
+        except (ValueError, TypeError):
+            return jsonify({"ok": False, "error": "Invalid amount"}), 400
+        
+        if not ensure_injectived_installed():
+            return jsonify({
+                "ok": False,
+                "error": "injective-cli not available"
+            }), 503
+        
+        result = send_transaction(
+            from_address, to_address, amount_inj,
+            wallet_name, is_testnet, passphrase
+        )
+        
+        if not result.get("ok"):
+            return jsonify(result), 400
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 if __name__ == "__main__":

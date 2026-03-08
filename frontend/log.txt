@@ -1,1 +1,1 @@
-[idle] 待命中
+[executing] 开发钱包连接功能
