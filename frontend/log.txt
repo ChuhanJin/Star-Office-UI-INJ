@@ -1,1 +1,1 @@
-[executing] Fixing JS syntax error
+[executing] Fixing SyntaxError - running tests first

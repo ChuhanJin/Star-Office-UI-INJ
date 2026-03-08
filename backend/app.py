@@ -141,7 +141,11 @@ def add_no_cache_headers(response):
     """
     path = (request.path or "")
     if path.startswith('/static/') and 200 <= response.status_code < 300:
-        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        # JS/CSS files: short cache since they use ?v= versioning but we want fast updates
+        if path.endswith('.js') or path.endswith('.css'):
+            response.headers["Cache-Control"] = "public, max-age=60"
+        else:
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
         response.headers.pop("Pragma", None)
         response.headers.pop("Expires", None)
     else:
@@ -255,6 +259,9 @@ def index():
 
     resp = make_response(_INDEX_HTML_CACHE)
     resp.headers["Content-Type"] = "text/html; charset=utf-8"
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
     return resp
 
 
