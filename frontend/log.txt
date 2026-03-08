@@ -1,1 +1,1 @@
-[executing] 修正Injective EVM网络配置
+[executing] English-only conversion — manual

@@ -277,7 +277,7 @@ const ViemWallet = (() => {
     if (state.connected && state.account) {
       // Connected state
       if (dot) dot.className = 'dot connected';
-      if (text) text.textContent = '✓ 已连接';
+      if (text) text.textContent = '✓ Connected';
       if (addr) addr.textContent = truncateAddress(state.account);
       if (badge) {
         badge.textContent = state.network === 'testnet' ? 'TESTNET' : 'MAINNET';
@@ -289,8 +289,8 @@ const ViemWallet = (() => {
     } else {
       // Disconnected state
       if (dot) dot.className = 'dot';
-      if (text) text.textContent = '未连接';
-      if (addr) addr.textContent = '未连接';
+      if (text) text.textContent = 'Not connected';
+      if (addr) addr.textContent = 'Not connected';
       if (btnConnect) btnConnect.style.display = 'inline-block';
       if (btnDisconnect) btnDisconnect.style.display = 'none';
       if (btnNetworkToggle) btnNetworkToggle.style.display = 'none';
@@ -329,7 +329,7 @@ const ViemWallet = (() => {
     if (btnConnect) btnConnect.disabled = true;
 
     try {
-      showError('连接中...');
+      showError('Connecting...');
 
       if (!await initProvider()) {
         state.connected = false;
@@ -365,7 +365,7 @@ const ViemWallet = (() => {
       }
     } catch (error) {
       state.connected = false;
-      showError(`连接失败: ${error.message}`);
+      showError(`Connection failed: ${error.message}`);
       updateUI();
     } finally {
       if (btnConnect) btnConnect.disabled = false;
@@ -380,7 +380,7 @@ const ViemWallet = (() => {
       refreshBalanceUI();
       clearError();
     } catch (error) {
-      showError(`余额查询失败: ${error.message}`);
+      showError(`Balance query failed: ${error.message}`);
     }
   }
 
@@ -391,13 +391,13 @@ const ViemWallet = (() => {
     if (btnNetworkToggle) btnNetworkToggle.disabled = true;
 
     try {
-      showError('切换网络中...');
+      showError('Switching network...');
       const success = await switchNetwork(newNetwork);
       if (success) {
         clearError();
       }
     } catch (error) {
-      showError(`网络切换失败: ${error.message}`);
+      showError(`Network switch failed: ${error.message}`);
     } finally {
       if (btnNetworkToggle) btnNetworkToggle.disabled = false;
     }
@@ -419,7 +419,7 @@ const ViemWallet = (() => {
   async function init() {
     // Check if MetaMask is available
     if (!window.ethereum) {
-      showError('MetaMask 未安装。请先安装 MetaMask 扩展。');
+      showError('MetaMask not installed. Please install the MetaMask extension.');
       return false;
     }
 

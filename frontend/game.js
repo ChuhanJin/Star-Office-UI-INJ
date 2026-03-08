@@ -100,90 +100,90 @@ function hideLoadingOverlay() {
 }
 
 const STATES = {
-  idle: { name: '待命', area: 'breakroom' },
-  writing: { name: '整理文档', area: 'writing' },
-  researching: { name: '搜索信息', area: 'researching' },
-  executing: { name: '执行任务', area: 'writing' },
-  syncing: { name: '同步备份', area: 'writing' },
-  error: { name: '出错了', area: 'error' }
+  idle: { name: 'Idle', area: 'breakroom' },
+  writing: { name: 'Writing', area: 'writing' },
+  researching: { name: 'Researching', area: 'researching' },
+  executing: { name: 'Executing', area: 'writing' },
+  syncing: { name: 'Syncing', area: 'writing' },
+  error: { name: 'Error', area: 'error' }
 };
 
 const BUBBLE_TEXTS = {
   idle: [
-    '待命中：耳朵竖起来了',
-    '我在这儿，随时可以开工',
-    '先把桌面收拾干净再说',
-    '呼——给大脑放个风',
-    '今天也要优雅地高效',
-    '等待，是为了更准确的一击',
-    '咖啡还热，灵感也还在',
-    '我在后台给你加 Buff',
-    '状态：静心 / 充电',
-    '小猫说：慢一点也没关系'
+    'Idle: ears perked up',
+    "I'm here, ready to go",
+    'Let me tidy up the desk first',
+    'Ahh—giving my brain some air',
+    'Elegance and efficiency today too',
+    'Wait, so my next strike lands true',
+    "Coffee's still hot, inspiration too",
+    "I'm buffing you in the background",
+    'Status: calm / charging',
+    'Little cat says: slow is fine too'
   ],
   writing: [
-    '进入专注模式：勿扰',
-    '先把关键路径跑通',
-    '我来把复杂变简单',
-    '把 bug 关进笼子里',
-    '写到一半，先保存',
-    '把每一步都做成可回滚',
-    '今天的进度，明天的底气',
-    '先收敛，再发散',
-    '让系统变得更可解释',
-    '稳住，我们能赢'
+    'Focus mode: do not disturb',
+    'Let me trace the critical path first',
+    "I'll turn complexity into simplicity",
+    'Caging the bugs',
+    'Halfway done, saving now',
+    'Making every step rollbackable',
+    "Today's progress, tomorrow's confidence",
+    'Converge first, then diverge',
+    'Making the system more interpretable',
+    'Hold tight, we can win'
   ],
   researching: [
-    '我在挖证据链',
-    '让我把信息熬成结论',
-    '找到了：关键在这里',
-    '先把变量控制住',
-    '我在查：它为什么会这样',
-    '把直觉写成验证',
-    '先定位，再优化',
-    '别急，先画因果图'
+    "I'm digging the evidence chain",
+    'Let me reduce the info into conclusions',
+    'Found it: the key is here',
+    'First lock down the variables',
+    "I'm checking: why does it do this",
+    'Write intuition into proof',
+    'Locate first, optimize later',
+    "Don't rush, let me draw the causal map"
   ],
   executing: [
-    '执行中：不要眨眼',
-    '把任务切成小块逐个击破',
-    '开始跑 pipeline',
-    '一键推进：走你',
-    '让结果自己说话',
-    '先做最小可行，再做最美版本'
+    "Running: don't blink",
+    'Slice tasks into bite-sized chunks',
+    'Pipeline running',
+    'One-click push: go',
+    'Let results speak for themselves',
+    'MVP first, then the beautiful version'
   ],
   syncing: [
-    '同步中：把今天锁进云里',
-    '备份不是仪式，是安全感',
-    '写入中…别断电',
-    '把变更交给时间戳',
-    '云端对齐：咔哒',
-    '同步完成前先别乱动',
-    '把未来的自己从灾难里救出来',
-    '多一份备份，少一份后悔'
+    'Syncing: locking today in the cloud',
+    "Backup isn't ceremony, it's safety",
+    "Writing… don't lose power",
+    'Commits tied to timestamps',
+    'Cloud alignment: click',
+    "Don't move until sync finishes",
+    'Saving future-me from disaster',
+    'One more backup, one less regret'
   ],
   error: [
-    '警报响了：先别慌',
-    '我闻到 bug 的味道了',
-    '先复现，再谈修复',
-    '把日志给我，我会说人话',
-    '错误不是敌人，是线索',
-    '把影响面圈起来',
-    '先止血，再手术',
-    '我在：马上定位根因',
-    '别怕，这种我见多了',
-    '报警中：让问题自己现形'
+    "Alarm: don't panic yet",
+    'I smell bug in the air',
+    'Reproduce first, fix later',
+    "Give me the logs, I'll speak sense",
+    "Error isn't foe, it's a clue",
+    'Circle the blast radius',
+    'Stoppage first, then surgery',
+    "I'm here: hunting root cause now",
+    "Don't worry, seen this a thousand times",
+    'Alert: let the problem reveal itself'
   ],
   cat: [
-    '喵~',
-    '咕噜咕噜…',
-    '尾巴摇一摇',
-    '晒太阳最开心',
-    '有人来看我啦',
-    '我是这个办公室的吉祥物',
-    '伸个懒腰',
-    '今天的罐罐准备好了吗',
-    '呼噜呼噜',
-    '这个位置视野最好'
+    'Meow~',
+    'Purr purr…',
+    'Tail wag',
+    'Sunbathing is the best',
+    'Oh, a visitor!',
+    "I'm the office mascot",
+    'Stretching',
+    'Is today\'s treat ready?',
+    'Purr purr',
+    'Best view in the office'
   ]
 };
 
