@@ -56,7 +56,7 @@ const ViemWallet = (() => {
     btnConnect: () => document.getElementById('btn-wallet-connect'),
     btnRefresh: () => document.getElementById('btn-wallet-refresh'),
     btnDisconnect: () => document.getElementById('btn-wallet-disconnect'),
-    btnNetworkToggle: () => document.getElementById('btn-wallet-network-toggle'),
+    btnNetworkToggle: () => document.getElementById('wallet-network-badge'),
     actionsSecondary: () => document.getElementById('wallet-actions-secondary'),
     disconnectedHint: () => document.getElementById('wallet-disconnected-hint'),
   };
@@ -422,20 +422,21 @@ const ViemWallet = (() => {
 
   async function toggleNetwork() {
     const newNetwork = state.network === 'mainnet' ? 'testnet' : 'mainnet';
-    
-    const btnNetworkToggle = DOM.btnNetworkToggle();
-    if (btnNetworkToggle) btnNetworkToggle.disabled = true;
+
+    const badge = DOM.btnNetworkToggle(); // now points to #wallet-network-badge
+    if (badge) { badge.disabled = true; badge.textContent = '⏳ Switching...'; }
 
     try {
-      showError('Switching network...');
+      showError('Switching to ' + newNetwork + '...');
       const success = await switchNetwork(newNetwork);
       if (success) {
         clearError();
       }
     } catch (error) {
-      showError(`Network switch failed: ${error.message}`);
+      showError('Network switch failed: ' + error.message);
     } finally {
-      if (btnNetworkToggle) btnNetworkToggle.disabled = false;
+      if (badge) badge.disabled = false;
+      // updateUI() called inside switchNetwork will restore badge text
     }
   }
 
