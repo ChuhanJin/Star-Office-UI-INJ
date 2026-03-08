@@ -421,10 +421,15 @@ const ViemWallet = (() => {
   }
 
   async function toggleNetwork() {
+    if (!state.connected) {
+      showError('Connect wallet first.');
+      return;
+    }
     const newNetwork = state.network === 'mainnet' ? 'testnet' : 'mainnet';
+    console.log('[ViemWallet] toggleNetwork: switching to', newNetwork);
 
-    const badge = DOM.btnNetworkToggle(); // now points to #wallet-network-badge
-    if (badge) { badge.disabled = true; badge.textContent = '⏳ Switching...'; }
+    const badge = DOM.btnNetworkToggle(); // points to #wallet-network-badge
+    if (badge) { badge.disabled = true; badge.textContent = '⏳...'; }
 
     try {
       showError('Switching to ' + newNetwork + '...');
@@ -433,10 +438,11 @@ const ViemWallet = (() => {
         clearError();
       }
     } catch (error) {
+      console.error('[ViemWallet] toggleNetwork error:', error);
       showError('Network switch failed: ' + error.message);
     } finally {
       if (badge) badge.disabled = false;
-      // updateUI() called inside switchNetwork will restore badge text
+      // updateUI() inside switchNetwork restores the badge label
     }
   }
 
