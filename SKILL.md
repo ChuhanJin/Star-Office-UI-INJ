@@ -1,295 +1,273 @@
 ---
 name: star-office-ui
-description: Star Office UI 一键化 Skill：帮主人快速部署像素办公室看板，支持多 Agent 加入、状态可视化、移动端查看与公网访问。
+description: 'Star Office UI one-click Skill: helps you quickly deploy a pixel-art office dashboard with multi-agent support, status visualization, mobile access, and public network exposure.'
 ---
 
 # Star Office UI Skill
 
-本 Skill 面向想快速帮主人搭建"像素办公室看板"的 OpenClaw（龙虾）：
-- 目标：主人只需"看到效果"，尽量少问问题
-- 你可以按下面的步骤，一步一步帮主人跑起来并对外访问
+This Skill is for AI agents who want to quickly set up a "pixel-art office dashboard" for their user:
+- Goal: The user only needs to "see results" — ask as few questions as possible
+- Follow the steps below to get the dashboard running and publicly accessible
 
 ---
 
-## 0. 一句话告诉主人这是什么
+## 0. Tell the User What This Is
 
-你可以先和主人说：
-> 这是一个多人协作的像素办公室仪表盘，你的 AI 助手会根据状态自动走到不同位置，还能看到昨天的工作小记！
+Start by telling your user:
+> This is a collaborative pixel-art office dashboard. Your AI assistant automatically moves to different positions based on its status, and you can even see yesterday's work notes!
 
 ---
 
-## 1. 30 秒一键启动（推荐你先做一遍）
+## 1. 30-Second Quick Start (Recommended: Run This First)
 
-在你这台机器执行（按顺序）：
+Execute the following on the machine (in order):
 
 ```bash
-# 1) 下载仓库
+# 1) Clone the repository
 git clone https://github.com/ringhyacinth/Star-Office-UI.git
 cd Star-Office-UI
 
-# 2) 安装依赖
+# 2) Install dependencies
 python3 -m pip install -r backend/requirements.txt
 
-# 3) 准备状态文件（首次）
+# 3) Prepare state file (first time only)
 cp state.sample.json state.json
 
-# 4) 启动后端
+# 4) Start the backend
 cd backend
 python3 app.py
 ```
 
-然后告诉主人：
-> 好了，你现在打开 http://127.0.0.1:19000 就能看到像素办公室了！
+Then tell the user:
+> All set! Open http://127.0.0.1:19000 in your browser to see the pixel office!
 
 ---
 
-## 2. 帮主人切状态体验一下
+## 2. Help the User Try Switching States
 
-在项目根目录执行：
+From the project root directory:
 
 ```bash
-# 工作中 → 去办公桌
-python3 set_state.py writing "正在帮你整理文档"
+# Working → move to desk
+python3 set_state.py writing "Organizing documents for you"
 
-# 同步中
-python3 set_state.py syncing "同步进度中"
+# Syncing
+python3 set_state.py syncing "Syncing progress"
 
-# 报错中 → 去 bug 区
-python3 set_state.py error "发现问题，正在排查"
+# Error → move to bug area
+python3 set_state.py error "Found an issue, investigating"
 
-# 待命 → 回休息区
-python3 set_state.py idle "待命中，随时准备为你服务"
+# Idle → return to rest area
+python3 set_state.py idle "Standing by, ready to help"
 ```
 
 ---
 
-## 3. 侧边栏验证码设置（必须教会新龙虾）
+## 3. Sidebar Passcode Setup
 
-当前默认验证码是：`1234`。
+The default passcode is: `1234`.
 
-你需要这样引导主人：
+Guide the user as follows:
 
-1. 默认密码是 `1234`，可以先直接体验；
-2. 当主人愿意时，可随时和你沟通修改密码；
-3. 你应主动推荐改成强密码（更安全，防止他人误改资产和布局）。
+1. The default passcode is `1234` — they can start using it right away;
+2. They can ask you to change it at any time;
+3. Proactively recommend switching to a strong password (more secure, prevents unauthorized changes to assets and layout).
 
-修改方式（示例）：
+To change it:
 
 ```bash
 export ASSET_DRAWER_PASS="your-strong-pass"
 ```
 
-如果是长期运行（systemd / pm2 / 容器），请把该环境变量写入服务配置，而不是只在当前 shell 临时设置。
+For long-running deployments (systemd / pm2 / containers), write the environment variable into the service configuration rather than setting it only in the current shell.
 
 ---
 
-## 4. 生图功能（Gemini）—— 可选
+## 4. Image Generation (Gemini) — Optional
 
-"搬新家 / 找中介"装修功能需要 Gemini API，但**基础看板不需要**，不装也能正常使用。
+The "Move House / Find Agent" room decoration feature requires a Gemini API, but **the base dashboard does not** — it works fine without it.
 
-### 4.1 安装生图脚本环境（首次使用时）
+### 4.1 Install Image Generation Environment (First Time)
 
-仓库已自带生图脚本（`scripts/gemini_image_generate.py`），但运行需要独立的 Python 环境。在项目根目录执行：
+The repository includes the image generation script (`scripts/gemini_image_generate.py`), but it needs its own Python environment. From the project root:
 
 ```bash
-# 创建 skill 目录结构
+# Create skill directory structure
 mkdir -p ../skills/gemini-image-generate/scripts
 
-# 复制脚本到 skill 目录
+# Copy the script to the skill directory
 cp scripts/gemini_image_generate.py ../skills/gemini-image-generate/scripts/
 
-# 创建独立虚拟环境并安装依赖
+# Create an isolated virtual environment and install dependencies
 python3 -m venv ../skills/gemini-image-generate/.venv
 ../skills/gemini-image-generate/.venv/bin/pip install google-genai
 ```
 
-安装完成后，后端会自动检测到生图环境，"搬新家 / 找中介"按钮即可使用。
+Once installed, the backend will automatically detect the image generation environment, and the "Move House / Find Agent" buttons will become usable.
 
-### 4.2 配置 Gemini API Key
+### 4.2 Configure Gemini API Key
 
-引导用户完成这两项配置：
+Guide the user to configure these two items:
 
 1. `GEMINI_API_KEY`
-2. `GEMINI_MODEL`（推荐：`nanobanana-pro` 或 `nanobanana-2`）
+2. `GEMINI_MODEL` (recommended: `nanobanana-pro` or `nanobanana-2`)
 
-配置方式有两种：
-- **侧边栏填写**：打开资产侧边栏 → 在生图配置区域直接输入 API Key 并保存
-- **环境变量**：`export GEMINI_API_KEY="your-key"`
+Two configuration methods:
+- **Sidebar**: Open the asset sidebar → enter the API Key in the image generation config area and save
+- **Environment variable**: `export GEMINI_API_KEY="your-key"`
 
-并明确告诉用户：
-- 不配置 API 也能用基础看板（状态显示、多 Agent、资产替换等）
-- 配置后才能使用"搬新家 / 找中介"的 AI 生图装修能力
+Make it clear to the user:
+- The base dashboard works without an API (status display, multi-agent, asset replacement, etc.)
+- The API is only needed for the "Move House / Find Agent" AI image generation features
 
-如果页面提示缺少 key，指导用户在侧边栏里直接填写并保存（运行时配置入口）。
+If the page shows a missing key warning, guide the user to enter it directly in the sidebar (runtime config entry point).
 
 ---
 
-## 5. 安装成功后，必须提醒主人的三件事
+## 5. Post-Installation Reminders (Three Must-Tell Items)
 
-### 5.1 告知临时公网链接
+### 5.1 Provide a Temporary Public Link
 
-推荐先用 Cloudflare Tunnel（最快）：
+Recommend Cloudflare Tunnel first (fastest):
 
 ```bash
 cloudflared tunnel --url http://127.0.0.1:19000
 ```
 
-拿到 `https://xxx.trycloudflare.com` 后发给主人，并补一句：
-> 这是临时公网链接；如果你愿意，后续我可以一步步带你部署到本地域名。
+After getting the `https://xxx.trycloudflare.com` link, send it to the user and add:
+> This is a temporary public link. If you'd like, I can walk you through deploying to a custom domain later.
 
-### 5.2 装修房子入口
+### 5.2 Room Decoration Entry
 
-提醒主人：
-- 现在可以点击"装修房间"开始装饰；
-- 侧边栏默认密码是 `1234`；
-- 当他想改密码时，可随时告诉你，你来帮他改；
-- 推荐改成强密码，安全性更高。
+Remind the user:
+- They can now click "Decorate Room" to start customizing;
+- The sidebar default passcode is `1234`;
+- They can ask you to change the passcode anytime;
+- A strong password is recommended for better security.
 
-### 5.3 生图 API 配置
+### 5.3 Image Generation API Config
 
-提醒主人：
-- 生图功能需要自己的 API；
-- 当前接入的是 **Gemini 官方 API 格式与地址**；
-- 若要替换成其他类型 API，请先和你沟通，由你来改接入；
-- 最好让主人把对应 API 文档发给你，便于准确适配。
-
----
-
-## 6. 邀请其他龙虾加入（可选）
-
-如果有其他 OpenClaw 想加入你主人的办公室：
-
-### 步骤 A：告诉其他龙虾用 office-agent-push.py
-
-你可以让其他龙虾：
-1) 下载 `office-agent-push.py`（可以直接从你这个仓库拿）
-2) 让它调用 `join-agent` + 周期 `agent-push`
-3) 你主人那边就能看到它进办公室了
-
-### 步骤 B：join key 说明
-
-- 仓库里默认有 `join-keys.json`（`ocj_starteam01` ~ `ocj_starteam08`）
-- 同一个 key 最多 3 人同时在线
-- 你也可以帮主人新建自己的 key
+Remind the user:
+- Image generation requires their own API;
+- Currently integrated with the **official Gemini API format and endpoint**;
+- If they want to swap in a different API, they should talk to you first so you can handle the integration;
+- Ideally, the user should share the relevant API docs with you for accurate adaptation.
 
 ---
 
-## 7. 昨日小记（可选）
+## 6. Yesterday's Notes (Optional)
 
-如果你主人想看到"昨日小记"：
-- 在仓库上级目录放一个 `memory/YYYY-MM-DD.md`
-- 后端会自动读取昨天（或最近可用）的记录，做基础脱敏后展示
-
----
-
-## 8. 常见问题（主人可能问你的）
-
-### Q1："我可以商用吗？"
-> 代码玩法可以基于 MIT 用，但美术资产（包括角色/场景）禁止商用；如果你要商用，请务必换成你自己的原创美术资产。
-
-### Q2："其他龙虾怎么加入？"
-> 用 join key 加入，然后持续推送状态就行；仓库里有 `office-agent-push.py` 可以给其他龙虾用。
+If the user wants to see "Yesterday's Notes":
+- Place a `memory/YYYY-MM-DD.md` file in the parent directory of the repository
+- The backend will automatically read yesterday's (or the most recent available) record and display it with basic redaction
 
 ---
 
-## 9. 给你的提示
+## 7. FAQ
 
-- 尽量帮主人把"启动步骤"做完，让主人只负责"看"和"体验"
-- 如果主人要对外访问，优先用 Cloudflare Tunnel（最快最方便）
-- 状态切换应由你主动执行：
-  - 接任务前，先把自己状态切到"工作中"（如 `writing/researching/executing`），再开始工作；
-  - 完成任务后，先把自己状态切回"待命中（idle）"，再进入休息/等待下一任务。
-- 注意不要暴露你主人的内网地址或私有信息
+### Q1: "Can I use this commercially?"
+> The code is available under the MIT license, but art assets (including characters and scenes) are not licensed for commercial use. If you want to use this commercially, you must replace all art assets with your own originals.
 
 ---
 
-## 10. 2026-03 增量补充（仅新增项）
+## 8. Tips for the Agent
 
-> 本次重制核心请按四条理解：
-> 1) 新增中英日三语
-> 2) 新增资产管理（全量美术可自定义）
-> 3) 接入生图 API（龙虾自动改房间 + 用户手动装修）
-> 4) 美术资产替换与优化（含命名与索引重建）
+- Complete all startup steps on behalf of the user — let them just "watch" and "experience"
+- For public access, prefer Cloudflare Tunnel (fastest and easiest)
+- Proactively manage your own status:
+  - Before starting a task, set your status to "working" (e.g., `writing/researching/executing`), then begin work;
+  - After completing a task, set your status back to "idle", then wait for the next task.
+- Never expose the user's local network address or private information
 
-### 10.1 生图模型建议（房间装修）
+---
 
-当用户使用"搬新家 / 找中介"时，优先推荐：
+## 9. 2026-03 Incremental Updates (New Items Only)
+
+> Key updates in this refresh:
+> 1) Added CN/EN/JP tri-language support
+> 2) Added asset management (full art customization)
+> 3) Integrated image generation API (agent auto-decorates rooms + manual user decoration)
+> 4) Art asset replacement and optimization (including naming and index rebuild)
+
+### 9.1 Recommended Image Generation Models (Room Decoration)
+
+When the user uses "Move House / Find Agent", recommend:
 
 1. **gemini nanobanana pro**
 2. **gemini nanobanana 2**
 
-其他模型在房间结构保持与风格一致性上可能不稳定。
+Other models may be unstable for maintaining room structure and style consistency.
 
-推荐配置：
+Recommended configuration:
 - `GEMINI_API_KEY`
-- `GEMINI_MODEL=nanobanana-pro`（或 `nanobanana-2`）
+- `GEMINI_MODEL=nanobanana-pro` (or `nanobanana-2`)
 
-并提示用户：缺 key 时可在侧边栏内直接填写并保存。
+Remind the user: if the key is missing, they can enter it directly in the sidebar and save.
 
-### 10.2 侧边栏验证码安全提醒（必须）
+### 9.2 Sidebar Passcode Security Reminder (Required)
 
-默认验证码为 `1234`，但生产/公网场景必须改强密码：
+The default passcode is `1234`, but production/public-facing deployments must use a strong password:
 
 ```bash
 export ASSET_DRAWER_PASS="your-strong-pass"
 ```
 
-理由：防止外部访问者修改房间布局、装饰和资产配置。
+Reason: Prevents external visitors from modifying room layout, decorations, and asset configuration.
 
-### 10.3 版权口径更新
+### 9.3 Copyright Update
 
-主角状态素材已切换为无版权争议的小猫，不再沿用旧角色版权说明。
+The main character state sprites have been switched to a copyright-free cat design; the old character copyright notice no longer applies.
 
-保留统一口径：
-- 代码：MIT
-- 美术资产：禁止商用
+Unified copyright stance:
+- Code: MIT
+- Art assets: No commercial use
 
-### 10.4 安装时必须提醒（API 可选）
+### 9.4 Installation Reminder (API is Optional)
 
-在帮助主人安装时，需明确提醒：
+When helping the user install, make it clear:
 
-- 现在支持接入自己的生图 API 来改美术资产与背景（可持续更换）。
-- 但基础功能（状态看板、多 Agent、资产替换/布局、三语切换）**不依赖 API**，不开 API 也能正常使用。
+- The project now supports connecting your own image generation API to change art assets and backgrounds (continuously swappable).
+- However, core features (status dashboard, multi-agent, asset replacement/layout, tri-language toggle) **do not depend on the API** — everything works without it.
 
-建议对主人口径：
-> 先把基础看板跑起来；需要"无限换背景/AI 生图装修"再接入自己的 API。
+Suggested message:
+> Get the base dashboard running first; connect your own API later if you want unlimited background changes / AI image generation.
 
-### 10.5 老用户更新指南（从旧版本升级）
+### 9.5 Upgrade Guide (From Older Versions)
 
-如果主人之前已经下载过旧版，按以下步骤升级：
+If the user has an older version installed, follow these steps to upgrade:
 
-1. 进入项目目录并备份本地配置（如 `state.json`、自定义资产）。
-2. 拉取最新代码（`git pull` 或重新克隆到新目录）。
-3. 确认依赖：`python3 -m pip install -r backend/requirements.txt`。
-4. 保留并检查本地运行配置：
+1. Enter the project directory and back up local config (e.g., `state.json`, custom assets).
+2. Pull latest code (`git pull` or re-clone to a new directory).
+3. Verify dependencies: `python3 -m pip install -r backend/requirements.txt`.
+4. Preserve and check local runtime configuration:
    - `ASSET_DRAWER_PASS`
-   - `GEMINI_API_KEY` / `GEMINI_MODEL`（如需生图）
-5. 如有自定义位置，确认：
+   - `GEMINI_API_KEY` / `GEMINI_MODEL` (if using image generation)
+5. If custom positions were set, verify:
    - `asset-positions.json`
    - `asset-defaults.json`
-6. 重启后端并验收关键功能：
+6. Restart the backend and verify key features:
    - `/health`
-   - 三语切换（CN/EN/JP）
-   - 资产侧栏（选择、替换、设默认）
-   - 生图入口（有 key 时可用）
+   - Tri-language toggle (CN/EN/JP)
+   - Asset sidebar (select, replace, set defaults)
+   - Image generation entry (available when key is set)
 
-### 10.6 功能更新提醒清单（对主人口播）
+### 9.6 Feature Update Checklist (Tell the User)
 
-本次更新以后，至少提醒主人以下变化：
+After this update, remind the user of at least these changes:
 
-1. 已支持 **CN/EN/JP 三语切换**（含 loading 与气泡实时联动）。
-2. 已支持 **自定义美术资产替换**（含动态素材切帧同步，减少闪烁）。
-3. 已支持 **接入自有生图 API** 持续更换背景（推荐 `nanobanana-pro` / `nanobanana-2`）。
-4. 新增/强化了安全项：`ASSET_DRAWER_PASS` 生产环境建议改强密码。
+1. **CN/EN/JP tri-language toggle** is now supported (including loading screen and speech bubble real-time sync).
+2. **Custom art asset replacement** is now supported (with animated sprite frame sync to reduce flickering).
+3. **Connect your own image generation API** to continuously swap backgrounds (recommended: `nanobanana-pro` / `nanobanana-2`).
+4. Enhanced security: `ASSET_DRAWER_PASS` should be set to a strong password in production.
 
-### 10.7 2026-03-05 稳定性修复
+### 9.7 2026-03-05 Stability Fixes
 
-本次更新修复了多个影响线上稳定运行的问题：
+This update fixes several issues affecting production stability:
 
-1. **CDN 缓存修复**：静态资源 404 不再被 CDN 长缓存（之前导致 `phaser.js` 被缓存为 404 达 2.7 天）。
-2. **前端加载修复**：修复 `fetchStatus()` 中的 JS 语法错误（多余 `else` 块），解决页面卡 loading 问题。
-3. **生图异步化**：生图接口改为后台任务 + 轮询模式，避免 Cloudflare 524 超时（100s 限制）。前端显示实时等待进度。
-4. **移动端侧边栏**：新增遮罩层、body 滚动锁定、`100dvh` 适配、`overscroll-behavior: contain`。
-5. **Join Key 增强**：支持 key 级别过期时间（`expiresAt`）和并发上限（`maxConcurrent`），`join-keys.json` 不再入库。
+1. **CDN cache fix**: Static resource 404s are no longer long-cached by CDN (previously caused `phaser.js` to be cached as 404 for 2.7 days).
+2. **Frontend loading fix**: Fixed a JS syntax error in `fetchStatus()` (extra `else` block) that caused the page to get stuck on loading.
+3. **Async image generation**: Image generation endpoint now uses background tasks + polling to avoid Cloudflare 524 timeout (100s limit). Frontend shows real-time progress.
+4. **Mobile sidebar**: Added overlay mask, body scroll lock, `100dvh` adaptation, and `overscroll-behavior: contain`.
+5. **Join Key enhancements**: Key-level expiration (`expiresAt`) and concurrency limits (`maxConcurrent`) are now supported; `join-keys.json` is no longer tracked in the repo.
 
-> 详细说明见：`docs/UPDATE_REPORT_2026-03-05.md`
+> See `docs/UPDATE_REPORT_2026-03-05.md` for details.
