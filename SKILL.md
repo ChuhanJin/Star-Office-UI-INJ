@@ -1,5 +1,5 @@
 ---
-name: star-office-ui
+name: star-office-ui-inj
 description: 'Star Office UI one-click Skill: helps you quickly deploy a pixel-art office dashboard with multi-agent support, status visualization, mobile access, and public network exposure.'
 ---
 
@@ -14,7 +14,7 @@ This Skill is for AI agents who want to quickly set up a "pixel-art office dashb
 ## 0. Tell the User What This Is
 
 Start by telling your user:
-> This is a collaborative pixel-art office dashboard. Your AI assistant automatically moves to different positions based on its status, and you can even see yesterday's work notes!
+> This is a collaborative pixel-art office dashboard. Your AI assistant automatically moves to different positions based on its status, and you can even see injective wallet status, working logs and token usage!
 
 ---
 
@@ -27,16 +27,19 @@ Execute the following on the machine (in order):
 git clone https://github.com/ringhyacinth/Star-Office-UI.git
 cd Star-Office-UI
 
-# 2) Install dependencies
-python3 -m pip install -r backend/requirements.txt
+# 2) Create a virtual environment and install dependencies
+#    (Using venv avoids system Python pip issues on macOS/Linux)
+python3 -m venv .venv
+.venv/bin/pip install -r backend/requirements.txt
 
 # 3) Prepare state file (first time only)
 cp state.sample.json state.json
 
-# 4) Start the backend
-cd backend
-python3 app.py
+# 4) Start the backend (from project root)
+.venv/bin/python backend/app.py
 ```
+
+> **Troubleshooting**: If `python3 -m venv` fails, install the `python3-venv` package for your OS first (e.g. `sudo apt install python3-venv` on Ubuntu). On macOS with Homebrew Python, `venv` is included by default.
 
 Then tell the user:
 > All set! Open http://127.0.0.1:19000 in your browser to see the pixel office!
@@ -45,20 +48,20 @@ Then tell the user:
 
 ## 2. Help the User Try Switching States
 
-From the project root directory:
+From the project root directory (use the venv Python):
 
 ```bash
 # Working → move to desk
-python3 set_state.py writing "Organizing documents for you"
+.venv/bin/python set_state.py writing "Organizing documents for you"
 
 # Syncing
-python3 set_state.py syncing "Syncing progress"
+.venv/bin/python set_state.py syncing "Syncing progress"
 
 # Error → move to bug area
-python3 set_state.py error "Found an issue, investigating"
+.venv/bin/python set_state.py error "Found an issue, investigating"
 
 # Idle → return to rest area
-python3 set_state.py idle "Standing by, ready to help"
+.venv/bin/python set_state.py idle "Standing by, ready to help"
 ```
 
 ---
@@ -238,7 +241,7 @@ If the user has an older version installed, follow these steps to upgrade:
 
 1. Enter the project directory and back up local config (e.g., `state.json`, custom assets).
 2. Pull latest code (`git pull` or re-clone to a new directory).
-3. Verify dependencies: `python3 -m pip install -r backend/requirements.txt`.
+3. Verify dependencies: `.venv/bin/pip install -r backend/requirements.txt` (create a venv first if not present).
 4. Preserve and check local runtime configuration:
    - `ASSET_DRAWER_PASS`
    - `GEMINI_API_KEY` / `GEMINI_MODEL` (if using image generation)
