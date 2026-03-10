@@ -257,9 +257,10 @@ const ViemWallet = (() => {
 
   async function updateNetworkFromChainId() {
     // Determine which network based on chainId
-    if (state.chainId === 60) {
+    // Injective EVM Mainnet: 1776 (0x6f0), Testnet: 1439 (0x59f)
+    if (state.chainId === 1776) {
       state.network = 'mainnet';
-    } else if (state.chainId === 888) {
+    } else if (state.chainId === 1439) {
       state.network = 'testnet';
     }
   }
